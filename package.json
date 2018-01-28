@@ -40,8 +40,8 @@
     "lodash": "^4.17.4"
   },
   "peerDependencies": {
-    "expo": "^25.0.0",
-    "react": "^16.2.0",
-    "react-native": "^0.52.2"
+    "expo": ">=24.0.0",
+    "react": ">=16.2.0",
+    "react-native": ">=0.52.0"
   }
 }
