@@ -1,4 +1,4 @@
-# React Native Image Cache and Progressive Loading based on Expo
+# React Native Image Cache and Progressive Loading
 
 React Native image cache and progressive loading for iOS and Android. Based on Expo Kit.
 
