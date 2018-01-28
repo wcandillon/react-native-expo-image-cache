@@ -7,6 +7,8 @@ This is a component used in the [React Native Elements](https://react-native.sho
 [![CircleCI](https://circleci.com/gh/wcandillon/react-native-expo-image-cache.svg?style=svg)](https://circleci.com/gh/wcandillon/react-native-expo-image-cache)
 [![npm version](https://badge.fury.io/js/react-native-expo-image-cache.svg)](https://badge.fury.io/js/react-native-expo-image-cache)
 
+<img src="https://firebasestorage.googleapis.com/v0/b/react-native-e.appspot.com/o/2018-01-28%2017_36_46.gif?alt=media&token=6afaef74-454d-4c04-85ab-be410d0b225b" />
+
 ## Installation
 
 ```
