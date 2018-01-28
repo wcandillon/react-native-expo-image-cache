@@ -4,6 +4,9 @@ React Native image cache and progressive loading for iOS and Android. Based on E
 
 This is a component used in the [React Native Elements](https://react-native.shop/#elements) and the [React Native Fiber](https://react-native.shop/#fiber) starter kits.
 
+[![CircleCI](https://circleci.com/gh/wcandillon/react-native-expo-image-cache.svg?style=svg)](https://circleci.com/gh/wcandillon/react-native-expo-image-cache)
+[![npm version](https://badge.fury.io/js/react-native-expo-image-cache.svg)](https://badge.fury.io/js/react-native-expo-image-cache)
+
 ## Installation
 
 ```
