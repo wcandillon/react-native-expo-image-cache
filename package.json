@@ -1,0 +1,47 @@
+{
+  "name": "react-native-expo-image-cache",
+  "version": "0.0.0-development",
+  "description": "React Native Image Cache and Progressive Loading based on Expo",
+  "main": "src/index.js",
+  "scripts": {
+    "flow": "flow check --show-all-errors | flow-result-checker",
+    "lint": "eslint App.js src/",
+    "test": "yarn lint && yarn flow"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/wcandillon/react-native-expo-image-cache.git"
+  },
+  "author": "William Candillon <wcandillon@gmail.com>",
+  "license": "Apache-2.0",
+  "keywords": [
+    "react",
+    "image",
+    "cache"
+  ],
+  "bugs": {
+    "url": "https://github.com/wcandillon/react-native-expo-image-cache/issues"
+  },
+  "homepage": "https://github.com/wcandillon/react-native-expo-image-cache#readme",
+  "devDependencies": {
+    "babel-eslint": "^8.2.1",
+    "eslint": "^4.16.0",
+    "eslint-config-airbnb": "^16.1.0",
+    "eslint-plugin-flowtype": "^2.42.0",
+    "eslint-plugin-import": "^2.8.0",
+    "eslint-plugin-jsx-a11y": "^6.0.3",
+    "eslint-plugin-react": "^7.6.0",
+    "flow-bin": "^0.64.0",
+    "flow-result-checker": "^1.0.0"
+  },
+  "dependencies": {
+    "autobind-decorator": "^2.1.0",
+    "crypto-js": "^3.1.9-1",
+    "lodash": "^4.17.4"
+  },
+  "peerDependencies": {
+    "expo": "^25.0.0",
+    "react": "^16.2.0",
+    "react-native": "^0.52.2"
+  }
+}

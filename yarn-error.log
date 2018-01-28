@@ -1,0 +1,55 @@
+Arguments: 
+  /usr/local/bin/node /usr/local/bin/yarn add flow-result-checker flow-bin babel-eslint eslint eslint-config-airbnb eslint-plugin-flowtype eslint-plugin-import eslint-plugin-jsx-a11y eslint-plugin-react --dev
+
+PATH: 
+  /usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/go/bin
+
+Yarn version: 
+  1.1.0
+
+Node version: 
+  8.6.0
+
+Platform: 
+  darwin x64
+
+npm manifest: 
+  {
+    "name": "react-native-expo-image-cache",
+    "version": "0.0.0-development",
+    "description": "React Native Image Cache and Progressive Loading based on Expo",
+    "main": "lib/index.js",
+    "repository": "https://github.com/wcandillon/react-native-expo-image-cache",
+    "author": "William Candillon ",
+    "license": "MIT",
+    "repository": {
+      "type": "git",
+      "url": "https://github.com/wcandillon/react-native-expo-image-cache.git"
+    },
+    "keywords": [
+      "react",
+      "image",
+      "cache"
+    ],
+    "author": "William Candillon <wcandillon@gmail.com>",
+    "license": "Apache-2.0",
+    "bugs": {
+      "url": "https://github.com/wcandillon/react-native-expo-image-cache/issues"
+    },
+    "homepage": "https://github.com/wcandillon/react-native-expo-image-cache#readme",
+  }
+
+yarn manifest: 
+  No manifest
+
+Lockfile: 
+  No lockfile
+
+Trace: 
+  SyntaxError: /Users/wcandillon/tmp/react-native-expo-image-cache/package.json: Unexpected token } in JSON at position 763
+      at JSON.parse (<anonymous>)
+      at /usr/local/lib/node_modules/yarn/lib/cli.js:764:59
+      at Generator.next (<anonymous>)
+      at step (/usr/local/lib/node_modules/yarn/lib/cli.js:92:30)
+      at /usr/local/lib/node_modules/yarn/lib/cli.js:103:13
+      at <anonymous>
