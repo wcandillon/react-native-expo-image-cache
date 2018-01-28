@@ -11,6 +11,8 @@ This is a component used in the [React Native Elements](https://react-native.sho
 
 ## Installation
 
+This package has a peer dependency with React, React Native, and Expo.
+
 ```
 yarn add react-native-expo-image-cache
 ```
