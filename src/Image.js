@@ -1,6 +1,6 @@
 // @flow
 import autobind from "autobind-decorator";
-import * as _ from "lodash";
+import pickBy from "lodash.pickby";
 import * as React from "react";
 import {Image as RNImage, Animated, StyleSheet, View, Platform} from "react-native";
 import {BlurView} from "expo";
@@ -27,7 +27,7 @@ export default class Image extends React.Component<ImageProps, ImageState> {
         const {uri, style} = props;
         this.style = [
             StyleSheet.absoluteFill,
-            _.pickBy(StyleSheet.flatten(style), (value, key) => propsToCopy.indexOf(key) !== -1)
+            pickBy(StyleSheet.flatten(style), (value, key) => propsToCopy.indexOf(key) !== -1)
         ];
         CacheManager.cache(uri, newURI => this.setState({ uri: newURI }));
     }
