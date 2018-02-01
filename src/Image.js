@@ -48,6 +48,7 @@ export default class Image extends React.Component<ImageProps> {
 
     @autobind
     onLoadEnd() {
+        if( this.props === undefined ) return;
         const {preview} = this.props;
         if (preview) {
             Animated.timing(this.intensity, { duration: 300, toValue: 0, useNativeDriver: true }).start();
