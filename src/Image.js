@@ -4,6 +4,8 @@ import * as _ from "lodash";
 import * as React from "react";
 import {Image as RNImage, Animated, StyleSheet, View, Platform} from "react-native";
 import {BlurView} from "expo";
+import {observable, action} from "mobx";
+import {observer} from "mobx-react/native";
 import {type StyleObj} from "react-native/Libraries/StyleSheet/StyleSheetTypes";
 
 import CacheManager from "./CacheManager";
@@ -14,14 +16,18 @@ type ImageProps = {
     uri: string
 };
 
-type ImageState = {
-    uri: string,
-    intensity: Animated.Value
-};
-
-export default class Image extends React.Component<ImageProps, ImageState> {
+@observer
+export default class Image extends React.Component<ImageProps> {
 
     style: StyleObj;
+
+    @observable intensity = new Animated.Value(100);
+    @observable uri: string;
+
+    @autobind @action
+    setURI(uri: string) {
+        this.uri = uri;
+    }
 
     load(props: ImageProps) {
         const {uri, style} = props;
@@ -29,12 +35,10 @@ export default class Image extends React.Component<ImageProps, ImageState> {
             StyleSheet.absoluteFill,
             _.pickBy(StyleSheet.flatten(style), (value, key) => propsToCopy.indexOf(key) !== -1)
         ];
-        CacheManager.cache(uri, newURI => this.setState({ uri: newURI }));
+        CacheManager.cache(uri, this.setURI);
     }
 
     componentWillMount() {
-        const intensity = new Animated.Value(100);
-        this.setState({ intensity });
         this.load(this.props);
     }
 
@@ -45,16 +49,15 @@ export default class Image extends React.Component<ImageProps, ImageState> {
     @autobind
     onLoadEnd() {
         const {preview} = this.props;
-        const {intensity} = this.state;
         if (preview) {
-            Animated.timing(intensity, { duration: 300, toValue: 0, useNativeDriver: true }).start();
+            Animated.timing(this.intensity, { duration: 300, toValue: 0, useNativeDriver: true }).start();
         }
     }
 
     render(): React.Node {
         const {style: computedStyle} = this;
         const {preview, style} = this.props;
-        const {uri, intensity} = this.state;
+        const {uri, intensity} = this;
         const hasPreview = !!preview;
         const opacity = intensity.interpolate({
             inputRange: [0, 100],
