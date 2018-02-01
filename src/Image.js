@@ -4,7 +4,7 @@ import * as _ from "lodash";
 import * as React from "react";
 import {Image as RNImage, Animated, StyleSheet, View, Platform} from "react-native";
 import {BlurView} from "expo";
-import {observable, action}  from "mobx";
+import {observable, action} from "mobx";
 import {observer} from "mobx-react/native";
 import {type StyleObj} from "react-native/Libraries/StyleSheet/StyleSheetTypes";
 
