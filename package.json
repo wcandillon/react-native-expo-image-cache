@@ -1,6 +1,6 @@
 {
   "name": "react-native-expo-image-cache",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "React Native Image Cache and Progressive Loading based on Expo",
   "main": "dist/src/index.js",
   "files": [
@@ -46,9 +46,7 @@
     "babel-cli": "^6.26.0",
     "babel-preset-react-native": "^4.0.0",
     "crypto-js": "^3.1.9-1",
-    "lodash": "^4.17.4",
-    "mobx": "^3.4.1",
-    "mobx-react": "^4.3.5"
+    "lodash": "^4.17.4"
   },
   "peerDependencies": {
     "expo": ">=24.0.0",
