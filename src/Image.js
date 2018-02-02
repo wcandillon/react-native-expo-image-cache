@@ -4,8 +4,6 @@ import * as _ from "lodash";
 import * as React from "react";
 import {Image as RNImage, Animated, StyleSheet, View, Platform} from "react-native";
 import {BlurView} from "expo";
-import {observable, action} from "mobx";
-import {observer} from "mobx-react/native";
 import {type StyleObj} from "react-native/Libraries/StyleSheet/StyleSheetTypes";
 
 import CacheManager from "./CacheManager";
@@ -16,18 +14,15 @@ type ImageProps = {
     uri: string
 };
 
-@observer
-export default class Image extends React.Component<ImageProps> {
+type ImageState = {
+    uri: string,
+    intensity: Animated.Value
+};
+
+export default class Image extends React.Component<ImageProps, ImageState> {
 
     style: StyleObj;
-
-    @observable intensity = new Animated.Value(100);
-    @observable uri: string;
-
-    @autobind @action
-    setURI(uri: string) {
-        this.uri = uri;
-    }
+    mounted = false;
 
     load(props: ImageProps) {
         const {uri, style} = props;
@@ -39,6 +34,9 @@ export default class Image extends React.Component<ImageProps> {
     }
 
     componentWillMount() {
+        const intensity = new Animated.Value(100);
+        this.mounted = true;
+        this.setState({ intensity });
         this.load(this.props);
     }
 
@@ -46,18 +44,33 @@ export default class Image extends React.Component<ImageProps> {
         this.load(props);
     }
 
+    componentWillUnmount() {
+        this.mounted = false;
+    }
+
     @autobind
     onLoadEnd() {
-        const {preview} = this.props;
-        if (preview) {
-            Animated.timing(this.intensity, { duration: 300, toValue: 0, useNativeDriver: true }).start();
+        if (this.mounted) {
+            const {preview} = this.props;
+            if (preview) {
+                const intensity = new Animated.Value(100);
+                this.setState({ intensity });
+                Animated.timing(intensity, { duration: 300, toValue: 0, useNativeDriver: true }).start();
+            }
+        }
+    }
+
+    @autobind
+    setURI(uri: string) {
+        if (this.mounted) {
+            this.setState({ uri });
         }
     }
 
     render(): React.Node {
         const {style: computedStyle} = this;
         const {preview, style} = this.props;
-        const {uri, intensity} = this;
+        const {uri, intensity} = this.state;
         const hasPreview = !!preview;
         const opacity = intensity.interpolate({
             inputRange: [0, 100],
