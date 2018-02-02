@@ -22,6 +22,7 @@ type ImageState = {
 export default class Image extends React.Component<ImageProps, ImageState> {
 
     style: StyleObj;
+    mounted = false;
 
     load(props: ImageProps) {
         const {uri, style} = props;
@@ -29,11 +30,12 @@ export default class Image extends React.Component<ImageProps, ImageState> {
             StyleSheet.absoluteFill,
             _.pickBy(StyleSheet.flatten(style), (value, key) => propsToCopy.indexOf(key) !== -1)
         ];
-        CacheManager.cache(uri, newURI => this.setState({ uri: newURI }));
+        CacheManager.cache(uri, this.setURI);
     }
 
     componentWillMount() {
         const intensity = new Animated.Value(100);
+        this.mounted = true;
         this.setState({ intensity });
         this.load(this.props);
     }
@@ -42,12 +44,26 @@ export default class Image extends React.Component<ImageProps, ImageState> {
         this.load(props);
     }
 
+    componentWillUnmount() {
+        this.mounted = false;
+    }
+
     @autobind
     onLoadEnd() {
-        const {preview} = this.props;
-        const {intensity} = this.state;
-        if (preview) {
-            Animated.timing(intensity, { duration: 300, toValue: 0, useNativeDriver: true }).start();
+        if (this.mounted) {
+            const {preview} = this.props;
+            if (preview) {
+                const intensity = new Animated.Value(100);
+                this.setState({ intensity });
+                Animated.timing(intensity, { duration: 300, toValue: 0, useNativeDriver: true }).start();
+            }
+        }
+    }
+
+    @autobind
+    setURI(uri: string) {
+        if (this.mounted) {
+            this.setState({ uri });
         }
     }
 
