@@ -52,10 +52,8 @@ export default class Image extends React.Component<ImageProps, ImageState> {
 
     componentDidUpdate(prevProps: ImageProps, prevState: ImageState) {
         const {preview} = this.props;
-        const {uri} = this.state;
+        const {uri, intensity} = this.state;
         if (uri && preview && uri !== preview && prevState.uri === undefined) {
-            const intensity = new Animated.Value(100);
-            this.setState({ intensity });
             Animated.timing(intensity, { duration: 300, toValue: 0, useNativeDriver: true }).start();
         }
     }
