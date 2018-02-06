@@ -22,7 +22,7 @@ type ImageState = {
 export default class Image extends React.Component<ImageProps, ImageState> {
 
     style: StyleObj;
-    unmounted = false;
+    subscribedToCache = true;
 
     load(props: ImageProps) {
         const {uri, style} = props;
@@ -43,31 +43,29 @@ export default class Image extends React.Component<ImageProps, ImageState> {
         this.load(props);
     }
 
-    componentWillUnmount() {
-        this.isUnmounted = true;
-    }
-
-    @autobind
-    onLoadEnd() {
-        if (!this.isUnmounted) {
-            const {preview} = this.props;
-            if (preview) {
-                const intensity = new Animated.Value(100);
-                this.setState({ intensity });
-                Animated.timing(intensity, { duration: 300, toValue: 0, useNativeDriver: true }).start();
-            }
-        }
-    }
-
     @autobind
     setURI(uri: string) {
-        if (!this.isUnmounted) {
+        if (this.subscribedToCache) {
             this.setState({ uri });
         }
     }
 
+    componentDidUpdate(prevProps: ImageProps, prevState: ImageState) {
+        const {preview} = this.props;
+        const {uri} = this.state;
+        if (uri && preview && uri !== preview && prevState.uri === undefined) {
+            const intensity = new Animated.Value(100);
+            this.setState({ intensity });
+            Animated.timing(intensity, { duration: 300, toValue: 0, useNativeDriver: true }).start();
+        }
+    }
+
+    componentWillUnmount() {
+        this.subscribedToCache = false;
+    }
+
     render(): React.Node {
-        const {onLoadEnd, style: computedStyle} = this;
+        const {style: computedStyle} = this;
         const {preview, style} = this.props;
         const {uri, intensity} = this.state;
         const hasPreview = !!preview;
@@ -92,7 +90,6 @@ export default class Image extends React.Component<ImageProps, ImageState> {
                             source={{ uri }}
                             resizeMode="cover"
                             style={computedStyle}
-                            {...{onLoadEnd}}
                         />
                     )
                 }
