@@ -22,7 +22,7 @@ type ImageState = {
 export default class Image extends React.Component<ImageProps, ImageState> {
 
     style: StyleObj;
-    mounted = false;
+    subscribedToCache = true;
 
     load(props: ImageProps) {
         const {uri, style} = props;
@@ -35,7 +35,6 @@ export default class Image extends React.Component<ImageProps, ImageState> {
 
     componentWillMount() {
         const intensity = new Animated.Value(100);
-        this.mounted = true;
         this.setState({ intensity });
         this.load(this.props);
     }
@@ -44,27 +43,23 @@ export default class Image extends React.Component<ImageProps, ImageState> {
         this.load(props);
     }
 
-    componentWillUnmount() {
-        this.mounted = false;
-    }
-
-    @autobind
-    onLoadEnd() {
-        if (this.mounted) {
-            const {preview} = this.props;
-            if (preview) {
-                const intensity = new Animated.Value(100);
-                this.setState({ intensity });
-                Animated.timing(intensity, { duration: 300, toValue: 0, useNativeDriver: true }).start();
-            }
-        }
-    }
-
     @autobind
     setURI(uri: string) {
-        if (this.mounted) {
+        if (this.subscribedToCache) {
             this.setState({ uri });
         }
+    }
+
+    componentDidUpdate(prevProps: ImageProps, prevState: ImageState) {
+        const {preview} = this.props;
+        const {uri, intensity} = this.state;
+        if (uri && preview && uri !== preview && prevState.uri === undefined) {
+            Animated.timing(intensity, { duration: 300, toValue: 0, useNativeDriver: true }).start();
+        }
+    }
+
+    componentWillUnmount() {
+        this.subscribedToCache = false;
     }
 
     render(): React.Node {
@@ -74,7 +69,7 @@ export default class Image extends React.Component<ImageProps, ImageState> {
         const hasPreview = !!preview;
         const opacity = intensity.interpolate({
             inputRange: [0, 100],
-            outputRange: [0, 1]
+            outputRange: [0, 0.5]
         });
         return (
             <View {...{style}}>
@@ -93,7 +88,6 @@ export default class Image extends React.Component<ImageProps, ImageState> {
                             source={{ uri }}
                             resizeMode="cover"
                             style={computedStyle}
-                            onLoadEnd={this.onLoadEnd}
                         />
                     )
                 }
@@ -104,7 +98,7 @@ export default class Image extends React.Component<ImageProps, ImageState> {
                 }
                 {
                     hasPreview && Platform.OS === "android" && (
-                        <Animated.View style={[computedStyle, { backgroundColor: "rgba(0, 0, 0, 0.5)", opacity }]} />
+                        <Animated.View style={[computedStyle, { backgroundColor: "black", opacity }]} />
                     )
                 }
             </View>
