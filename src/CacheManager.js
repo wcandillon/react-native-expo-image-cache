@@ -16,8 +16,12 @@ export default class CacheManager {
             listener(path);
         } else {
             addListener(uri, listener);
-            await FileSystem.downloadAsync(uri, path);
-            notifyAll(uri, path);
+            try {
+                await FileSystem.downloadAsync(uri, path);
+                notifyAll(uri, path);
+            } catch (e) {
+                notifyAll(uri, uri);
+            }
             unsubscribe(uri);
         }
     }

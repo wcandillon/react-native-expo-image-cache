@@ -49,8 +49,8 @@
     "lodash": "^4.17.4"
   },
   "peerDependencies": {
-    "expo": ">=24.0.0",
-    "react": ">=16.0.0",
-    "react-native": ">=0.51.0"
+    "expo": "*",
+    "react": "*",
+    "react-native": "*"
   }
 }
