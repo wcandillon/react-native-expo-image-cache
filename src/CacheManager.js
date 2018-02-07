@@ -41,7 +41,8 @@ const addListener = (uri: string, listener: Listener) => {
 const isDownloading = (uri: string): boolean => CacheManager.listeners[uri] !== undefined;
 
 const getCacheEntry = async (uri): Promise<{ exists: boolean, path: string }> => {
-    const ext = uri.substring(uri.lastIndexOf("."), uri.indexOf("?") === -1 ? undefined : uri.indexOf("?"));
+    const filename = uri.substring(uri.lastIndexOf("/"), uri.indexOf("?") === -1 ? uri.length : uri.indexOf("?"));
+    const ext = filename.indexOf(".") === -1 ? ".jpg" : filename.substring(filename.lastIndexOf("."));
     const path = FileSystem.cacheDirectory + SHA1(uri) + ext;
     const info = await FileSystem.getInfoAsync(path);
     const {exists} = info;
