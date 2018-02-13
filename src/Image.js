@@ -30,7 +30,7 @@ export default class Image extends React.Component<ImageProps, ImageState> {
             StyleSheet.absoluteFill,
             _.pickBy(StyleSheet.flatten(style), (value, key) => propsToCopy.indexOf(key) !== -1)
         ];
-        CacheManager.cache(uri, this.setURI);
+        uri && CacheManager.cache(uri, this.setURI);
     }
 
     componentWillMount() {
@@ -75,9 +75,9 @@ export default class Image extends React.Component<ImageProps, ImageState> {
         return (
             <View {...{style}}>
                 {
-                    hasRequireHook && preview == null && uri == null (
+                    (hasRequireHook && preview === undefined && uri === undefined) && (
                         <RNImage
-                            source={hasRequireHook}
+                            source={requireHook}
                             resizeMode="cover"
                             style={computedStyle}
                         />
