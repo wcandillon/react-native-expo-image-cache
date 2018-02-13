@@ -28,7 +28,12 @@ export default class Image extends React.Component<ImageProps, ImageState> {
         const {uri, style} = props;
         this.style = [
             StyleSheet.absoluteFill,
-            _.pickBy(StyleSheet.flatten(style), (value, key) => propsToCopy.indexOf(key) !== -1)
+            _.transform(
+                _.pickBy(StyleSheet.flatten(style), (value, key) => propsToCopy.indexOf(key) !== -1),
+                (result, value, key) => {
+                    result[key] = value - style.borderWidth
+                }
+            )
         ];
         CacheManager.cache(uri, this.setURI);
     }
