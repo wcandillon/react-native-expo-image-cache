@@ -65,9 +65,9 @@ export default class Image extends React.Component<ImageProps, ImageState> {
 
     render(): React.Node {
         const {style: computedStyle} = this;
-        const {requireHook, preview, style} = this.props;
+        const {defaultSource, preview, style} = this.props;
         const {uri, intensity} = this.state;
-        const hasRequireHook = !!requireHook
+        const hasDefaultSource = !!defaultSource
         const hasPreview = !!preview;
         const opacity = intensity.interpolate({
             inputRange: [0, 100],
@@ -76,9 +76,9 @@ export default class Image extends React.Component<ImageProps, ImageState> {
         return (
             <View {...{style}}>
                 {
-                    (hasRequireHook && preview === undefined && uri === undefined) && (
+                    (hasDefaultSource && preview === undefined && uri === undefined) && (
                         <RNImage
-                            source={requireHook}
+                            source={defaultSource}
                             resizeMode="cover"
                             style={computedStyle}
                         />
