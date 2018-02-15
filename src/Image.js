@@ -1,5 +1,4 @@
 // @flow
-import autobind from "autobind-decorator";
 import * as _ from "lodash";
 import * as React from "react";
 import {Image as RNImage, Animated, StyleSheet, View, Platform} from "react-native";
@@ -48,12 +47,11 @@ export default class Image extends React.Component<ImageProps, ImageState> {
         this.load(props);
     }
 
-    @autobind
-    setURI(uri: string) {
+    setURI = (uri: string) => {
         if (this.subscribedToCache) {
             this.setState({ uri });
         }
-    }
+    };
 
     componentDidUpdate(prevProps: ImageProps, prevState: ImageState) {
         const {preview} = this.props;
