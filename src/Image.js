@@ -30,7 +30,7 @@ export default class Image extends React.Component<ImageProps, ImageState> {
             _.transform(
                 _.pickBy(StyleSheet.flatten(style), (value, key) => propsToCopy.indexOf(key) !== -1),
                 (result, value, key) => {
-                    result[key] = value - style.borderWidth
+                    result[key] = value - (style.borderWidth || 0)
                 }
             )
         ];
