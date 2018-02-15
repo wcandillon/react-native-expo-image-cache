@@ -18,7 +18,7 @@
     "url": "https://github.com/wcandillon/react-native-expo-image-cache.git"
   },
   "author": "William Candillon <wcandillon@gmail.com>",
-  "license": "Apache-2.0",
+  "license": "MIT",
   "keywords": [
     "react",
     "image",
