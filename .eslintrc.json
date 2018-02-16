@@ -4,7 +4,8 @@
         "plugin:flowtype/recommended"
     ],
     "plugins": [
-        "flowtype"
+        "flowtype",
+        "react-native"
     ],
     "rules": {
         "no-console": 2,
@@ -126,11 +127,18 @@
             "always"
         ],
         "flowtype/use-flow-type": 1,
-        "flowtype/valid-syntax": 1
+        "flowtype/valid-syntax": 1,
+        "react-native/no-unused-styles": 2,
+        "react-native/split-platform-components": 2,
+        "react-native/no-inline-styles": 2,
+        "react-native/no-color-literals": 2
     },
     "settings": {
         "flowtype": {
             "onlyFilesWithFlowAnnotation": false
         }
+    },
+    "env": {
+        "react-native/react-native": true
     }
 }
