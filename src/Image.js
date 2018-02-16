@@ -29,9 +29,8 @@ export default class Image extends React.Component<ImageProps, ImageState> {
             StyleSheet.absoluteFill,
             _.transform(
                 _.pickBy(StyleSheet.flatten(style), (value, key) => propsToCopy.indexOf(key) !== -1),
-                (result, value, key) => {
-                    Object.assign(result, {[key]: (value - (style.borderWidth || 0))});
-                }
+                // $FlowFixMe
+                (result, value, key) => Object.assign(result, { [key]: (value - (style.borderWidth || 0)) })
             )
         ];
         CacheManager.cache(uri, this.setURI);
