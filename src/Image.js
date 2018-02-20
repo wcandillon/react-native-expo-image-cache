@@ -81,6 +81,7 @@ export default class Image extends React.Component<ImageProps, ImageState> {
                             source={{ uri: preview }}
                             resizeMode="cover"
                             style={computedStyle}
+                            blurRadius={Platform.OS === "android" ? 1 : 0}
                         />
                     )
                 }
@@ -100,7 +101,7 @@ export default class Image extends React.Component<ImageProps, ImageState> {
                 }
                 {
                     hasPreview && Platform.OS === "android" && (
-                        <Animated.View style={[computedStyle, { backgroundColor: "black", opacity }]} />
+                        <Animated.View style={[computedStyle, { backgroundColor: black, opacity }]} />
                     )
                 }
             </View>
@@ -108,6 +109,7 @@ export default class Image extends React.Component<ImageProps, ImageState> {
     }
 }
 
+const black = "black";
 const propsToCopy = [
     "borderRadius", "borderBottomLeftRadius", "borderBottomRightRadius", "borderTopLeftRadius", "borderTopRightRadius"
 ];
