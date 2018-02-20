@@ -81,6 +81,7 @@ export default class Image extends React.Component<ImageProps, ImageState> {
                             source={{ uri: preview }}
                             resizeMode="cover"
                             style={computedStyle}
+                            blurRadius={Platform.OS === "android" ? 0.5 : 0}
                         />
                     )
                 }
