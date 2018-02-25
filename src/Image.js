@@ -76,7 +76,7 @@ export default class Image extends React.Component<ImageProps, ImageState> {
         return (
             <View {...{style}}>
                 {
-                    (hasDefaultSource && preview === undefined && uri === undefined) && (
+                    (hasDefaultSource && preview == undefined && uri == undefined) && (
                         <RNImage
                             source={defaultSource}
                             resizeMode="cover"
