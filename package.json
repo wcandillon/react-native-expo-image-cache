@@ -11,7 +11,7 @@
     "flow": "flow check --show-all-errors | flow-result-checker",
     "lint": "eslint App.js src/",
     "test": "yarn lint && yarn flow",
-    "prepare": "install-self-peers -- --ignore-scripts"
+    "prepare": "npm run compile && install-self-peers -- --ignore-scripts"
   },
   "repository": {
     "type": "git",
