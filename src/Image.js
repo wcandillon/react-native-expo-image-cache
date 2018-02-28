@@ -66,7 +66,7 @@ export default class Image extends React.Component<ImageProps, ImageState> {
 
     render(): React.Node {
         const {style: computedStyle} = this;
-        const {preview, style} = this.props;
+        const {preview, style, ...otherProps} = this.props;
         const {uri, intensity} = this.state;
         const hasPreview = !!preview;
         const opacity = intensity.interpolate({
@@ -89,8 +89,8 @@ export default class Image extends React.Component<ImageProps, ImageState> {
                     (uri && uri !== preview) && (
                         <RNImage
                             source={{ uri }}
-                            resizeMode="cover"
                             style={computedStyle}
+                            {...otherProps}
                         />
                     )
                 }
@@ -113,5 +113,4 @@ const black = "black";
 const propsToCopy = [
     "borderRadius", "borderBottomLeftRadius", "borderBottomRightRadius", "borderTopLeftRadius", "borderTopRightRadius"
 ];
-
 const AnimatedBlurView = Animated.createAnimatedComponent(BlurView);
