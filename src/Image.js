@@ -91,8 +91,8 @@ export default class Image extends React.Component<ImageProps, ImageState> {
                     (hasDefaultSource && !hasPreview && !hasURI) && (
                         <RNImage
                             source={imageSourceHandling(defaultSource)}
-                            resizeMode="cover"
                             style={computedStyle}
+                            {...otherProps}
                         />
                     )
                 }
