@@ -1,5 +1,4 @@
 // @flow
-import autobind from "autobind-decorator";
 import * as _ from "lodash";
 import * as React from "react";
 import {Image as RNImage, Animated, StyleSheet, View, Platform} from "react-native";
@@ -10,7 +9,8 @@ import CacheManager from "./CacheManager";
 
 type ImageProps = {
     style?: StyleObj,
-    preview?: string,
+    defaultSource?: any,
+    preview?: any,
     uri: string
 };
 
@@ -28,8 +28,11 @@ export default class Image extends React.Component<ImageProps, ImageState> {
         const {uri, style} = props;
         this.style = [
             StyleSheet.absoluteFill,
-            { width: "100%", height: "100%" },
-            _.pickBy(StyleSheet.flatten(style), (value, key) => propsToCopy.indexOf(key) !== -1)
+            _.transform(
+                _.pickBy(StyleSheet.flatten(style), (value, key) => propsToCopy.indexOf(key) !== -1),
+                // $FlowFixMe
+                (result, value, key) => Object.assign(result, { [key]: (value - (style.borderWidth || 0)) })
+            )
         ];
         uri && CacheManager.cache(uri, this.setURI);
     }
@@ -44,12 +47,11 @@ export default class Image extends React.Component<ImageProps, ImageState> {
         this.load(props);
     }
 
-    @autobind
-    setURI(uri: string) {
+    setURI = (uri: string) => {
         if (this.subscribedToCache) {
             this.setState({ uri });
         }
-    }
+    };
 
     componentDidUpdate(prevProps: ImageProps, prevState: ImageState) {
         const {preview} = this.props;
@@ -65,10 +67,10 @@ export default class Image extends React.Component<ImageProps, ImageState> {
 
     render(): React.Node {
         const {style: computedStyle} = this;
-        const {defaultSource, preview, style} = this.props;
+        const {defaultSource, preview, style, ...otherProps} = this.props;
         const {uri, intensity} = this.state;
-        const hasDefaultSource = !!defaultSource
         const hasPreview = !!preview;
+        const hasDefaultSource = !!defaultSource;
         const opacity = intensity.interpolate({
             inputRange: [0, 100],
             outputRange: [0, 0.5]
@@ -90,6 +92,7 @@ export default class Image extends React.Component<ImageProps, ImageState> {
                             source={{ uri: preview }}
                             resizeMode="cover"
                             style={computedStyle}
+                            blurRadius={Platform.OS === "android" ? 0.5 : 0}
                         />
                     )
                 }
@@ -97,8 +100,8 @@ export default class Image extends React.Component<ImageProps, ImageState> {
                     (uri && uri !== preview) && (
                         <RNImage
                             source={{ uri }}
-                            resizeMode="cover"
                             style={computedStyle}
+                            {...otherProps}
                         />
                     )
                 }
@@ -109,7 +112,7 @@ export default class Image extends React.Component<ImageProps, ImageState> {
                 }
                 {
                     hasPreview && Platform.OS === "android" && (
-                        <Animated.View style={[computedStyle, { backgroundColor: "black", opacity }]} />
+                        <Animated.View style={[computedStyle, { backgroundColor: black, opacity }]} />
                     )
                 }
             </View>
@@ -117,8 +120,8 @@ export default class Image extends React.Component<ImageProps, ImageState> {
     }
 }
 
+const black = "black";
 const propsToCopy = [
     "borderRadius", "borderBottomLeftRadius", "borderBottomRightRadius", "borderTopLeftRadius", "borderTopRightRadius"
 ];
-
 const AnimatedBlurView = Animated.createAnimatedComponent(BlurView);
