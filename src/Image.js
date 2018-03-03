@@ -9,8 +9,8 @@ import CacheManager from "./CacheManager";
 
 type ImageProps = {
     style?: StyleObj,
-    defaultSource?: any,
-    preview?: any,
+    defaultSource?: string | ImageSourcePropTypes | number,
+    preview?: string | ImageSourcePropTypes | number,
     uri: string
 };
 
@@ -18,6 +18,13 @@ type ImageState = {
     uri: string,
     intensity: Animated.Value
 };
+
+function imageSourceHandling(source: string | ImageSourcePropTypes | number): ImageSourcePropTypes | number {
+    if (Object.prototype.toString.call(source) === "[object String]") {
+        return { uri: source };
+    }
+    return source;
+}
 
 export default class Image extends React.Component<ImageProps, ImageState> {
 
@@ -34,7 +41,9 @@ export default class Image extends React.Component<ImageProps, ImageState> {
                 (result, value, key) => Object.assign(result, { [key]: (value - (style.borderWidth || 0)) })
             )
         ];
-        uri && CacheManager.cache(uri, this.setURI);
+        if (uri) {
+            CacheManager.cache(uri, this.setURI);
+        }
     }
 
     componentWillMount() {
@@ -69,8 +78,9 @@ export default class Image extends React.Component<ImageProps, ImageState> {
         const {style: computedStyle} = this;
         const {defaultSource, preview, style, ...otherProps} = this.props;
         const {uri, intensity} = this.state;
-        const hasPreview = !!preview;
         const hasDefaultSource = !!defaultSource;
+        const hasPreview = !!preview;
+        const hasURI = !!uri;
         const opacity = intensity.interpolate({
             inputRange: [0, 100],
             outputRange: [0, 0.5]
@@ -78,9 +88,9 @@ export default class Image extends React.Component<ImageProps, ImageState> {
         return (
             <View {...{style}}>
                 {
-                    (hasDefaultSource && preview == undefined && uri == undefined) && (
+                    (hasDefaultSource && !hasPreview && !hasURI) && (
                         <RNImage
-                            source={defaultSource}
+                            source={imageSourceHandling(defaultSource)}
                             resizeMode="cover"
                             style={computedStyle}
                         />
@@ -89,7 +99,7 @@ export default class Image extends React.Component<ImageProps, ImageState> {
                 {
                     hasPreview && (
                         <RNImage
-                            source={{ uri: preview }}
+                            source={imageSourceHandling(preview)}
                             resizeMode="cover"
                             style={computedStyle}
                             blurRadius={Platform.OS === "android" ? 0.5 : 0}
