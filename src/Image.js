@@ -79,7 +79,6 @@ export default class Image extends React.Component<ImageProps, ImageState> {
         });
         return (
             <View {...{style}}>
-
                 {
                     hasPreview && !isImageReady && (
                         <RNImage
