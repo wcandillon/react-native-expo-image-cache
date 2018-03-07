@@ -4,13 +4,14 @@ import * as React from "react";
 import {Image as RNImage, Animated, StyleSheet, View, Platform} from "react-native";
 import {BlurView} from "expo";
 import {type StyleObj} from "react-native/Libraries/StyleSheet/StyleSheetTypes";
+import typeof {ImageSourcePropType} from "react-native/Libraries/Image/ImageSourcePropType";
 
 import CacheManager from "./CacheManager";
 
 type ImageProps = {
     style?: StyleObj,
-    defaultSource?: string | ImageSourcePropTypes | number,
-    preview?: string | ImageSourcePropTypes | number,
+    defaultSource?: string | ImageSourcePropType,
+    preview?: string | ImageSourcePropType,
     uri: string
 };
 
@@ -19,7 +20,7 @@ type ImageState = {
     intensity: Animated.Value
 };
 
-function imageSourceHandling(source: string | ImageSourcePropTypes | number): ImageSourcePropTypes | number {
+function imageSourceHandling(source: string | ImageSourcePropType): ImageSourcePropType {
     if (Object.prototype.toString.call(source) === "[object String]") {
         return { uri: source };
     }
