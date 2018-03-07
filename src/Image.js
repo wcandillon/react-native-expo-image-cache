@@ -69,6 +69,7 @@ export default class Image extends React.Component<ImageProps, ImageState> {
         const {preview, style, ...otherProps} = this.props;
         const {uri, intensity} = this.state;
         const hasPreview = !!preview;
+        const isImageReady = uri && uri !== preview;
         const opacity = intensity.interpolate({
             inputRange: [0, 100],
             outputRange: [0, 0.5]
@@ -76,7 +77,7 @@ export default class Image extends React.Component<ImageProps, ImageState> {
         return (
             <View {...{style}}>
                 {
-                    hasPreview && (
+                    hasPreview && !isImageReady && (
                         <RNImage
                             source={{ uri: preview }}
                             resizeMode="cover"
@@ -86,7 +87,7 @@ export default class Image extends React.Component<ImageProps, ImageState> {
                     )
                 }
                 {
-                    (uri && uri !== preview) && (
+                    isImageReady && (
                         <RNImage
                             source={{ uri }}
                             style={computedStyle}
