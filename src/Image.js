@@ -69,7 +69,7 @@ export default class Image extends React.Component<ImageProps, ImageState> {
         const {preview, style, ...otherProps} = this.props;
         const {uri, intensity} = this.state;
         const hasPreview = !!preview;
-	const isImageReady = uri && uri !== preview;
+        const isImageReady = uri && uri !== preview;
         const opacity = intensity.interpolate({
             inputRange: [0, 100],
             outputRange: [0, 0.5]
