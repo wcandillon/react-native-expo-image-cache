@@ -4,12 +4,14 @@ import * as React from "react";
 import {Image as RNImage, Animated, StyleSheet, View, Platform} from "react-native";
 import {BlurView} from "expo";
 import {type StyleObj} from "react-native/Libraries/StyleSheet/StyleSheetTypes";
+import typeof {ImageSourcePropType} from "react-native/Libraries/Image/ImageSourcePropType";
 
 import CacheManager from "./CacheManager";
 
 type ImageProps = {
     style?: StyleObj,
-    preview?: string,
+    defaultSource?: string | ImageSourcePropType,
+    preview?: string | ImageSourcePropType,
     uri: string
 };
 
@@ -17,6 +19,13 @@ type ImageState = {
     uri: string,
     intensity: Animated.Value
 };
+
+function imageSourceHandling(source: string | ImageSourcePropType): ImageSourcePropType {
+    if (Object.prototype.toString.call(source) === "[object String]") {
+        return { uri: source };
+    }
+    return source;
+}
 
 export default class Image extends React.Component<ImageProps, ImageState> {
 
@@ -33,7 +42,9 @@ export default class Image extends React.Component<ImageProps, ImageState> {
                 (result, value, key) => Object.assign(result, { [key]: (value - (style.borderWidth || 0)) })
             )
         ];
-        CacheManager.cache(uri, this.setURI);
+        if (uri) {
+            CacheManager.cache(uri, this.setURI);
+        }
     }
 
     componentWillMount() {
@@ -66,9 +77,11 @@ export default class Image extends React.Component<ImageProps, ImageState> {
 
     render(): React.Node {
         const {style: computedStyle} = this;
-        const {preview, style} = this.props;
+        const {defaultSource, preview, style, ...otherProps} = this.props;
         const {uri, intensity} = this.state;
+        const hasDefaultSource = !!defaultSource;
         const hasPreview = !!preview;
+        const hasURI = !!uri;
         const opacity = intensity.interpolate({
             inputRange: [0, 100],
             outputRange: [0, 0.5]
@@ -76,9 +89,18 @@ export default class Image extends React.Component<ImageProps, ImageState> {
         return (
             <View {...{style}}>
                 {
+                    (hasDefaultSource && !hasPreview && !hasURI) && (
+                        <RNImage
+                            source={imageSourceHandling(defaultSource)}
+                            style={computedStyle}
+                            {...otherProps}
+                        />
+                    )
+                }
+                {
                     hasPreview && (
                         <RNImage
-                            source={{ uri: preview }}
+                            source={imageSourceHandling(preview)}
                             resizeMode="cover"
                             style={computedStyle}
                             blurRadius={Platform.OS === "android" ? 0.5 : 0}
@@ -89,8 +111,8 @@ export default class Image extends React.Component<ImageProps, ImageState> {
                     (uri && uri !== preview) && (
                         <RNImage
                             source={{ uri }}
-                            resizeMode="cover"
                             style={computedStyle}
+                            {...otherProps}
                         />
                     )
                 }
@@ -113,5 +135,4 @@ const black = "black";
 const propsToCopy = [
     "borderRadius", "borderBottomLeftRadius", "borderBottomRightRadius", "borderTopLeftRadius", "borderTopRightRadius"
 ];
-
 const AnimatedBlurView = Animated.createAnimatedComponent(BlurView);
