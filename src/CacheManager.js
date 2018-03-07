@@ -25,6 +25,11 @@ export default class CacheManager {
             unsubscribe(uri);
         }
     }
+
+    static async clearCache(): Promise<void> {
+        await FileSystem.deleteAsync(BASE_DIR, { idempotent: true });
+        await FileSystem.makeDirectoryAsync(BASE_DIR);
+    }
 }
 
 const unsubscribe = (uri: string) => delete CacheManager.listeners[uri];
@@ -40,10 +45,12 @@ const addListener = (uri: string, listener: Listener) => {
 
 const isDownloading = (uri: string): boolean => CacheManager.listeners[uri] !== undefined;
 
+const BASE_DIR = `${FileSystem.cacheDirectory}expo-image-cache/`;
+
 const getCacheEntry = async (uri): Promise<{ exists: boolean, path: string }> => {
     const filename = uri.substring(uri.lastIndexOf("/"), uri.indexOf("?") === -1 ? uri.length : uri.indexOf("?"));
     const ext = filename.indexOf(".") === -1 ? ".jpg" : filename.substring(filename.lastIndexOf("."));
-    const path = FileSystem.cacheDirectory + SHA1(uri) + ext;
+    const path = BASE_DIR + SHA1(uri) + ext;
     const info = await FileSystem.getInfoAsync(path);
     const {exists} = info;
     return { exists, path };
