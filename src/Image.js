@@ -4,12 +4,14 @@ import * as React from "react";
 import {Image as RNImage, Animated, StyleSheet, View, Platform} from "react-native";
 import {BlurView} from "expo";
 import {type StyleObj} from "react-native/Libraries/StyleSheet/StyleSheetTypes";
+import type {ImageSourcePropType} from "react-native/Libraries/Image/ImageSourcePropType";
 
 import CacheManager from "./CacheManager";
 
 type ImageProps = {
     style?: StyleObj,
-    preview?: string,
+    defaultSource?: ImageSourcePropType,
+    preview?: ImageSourcePropType,
     uri: string
 };
 
@@ -33,7 +35,9 @@ export default class Image extends React.Component<ImageProps, ImageState> {
                 (result, value, key) => Object.assign(result, { [key]: (value - (style.borderWidth || 0)) })
             )
         ];
-        CacheManager.cache(uri, this.setURI);
+        if (uri) {
+            CacheManager.cache(uri, this.setURI);
+        }
     }
 
     componentWillMount() {
@@ -66,9 +70,11 @@ export default class Image extends React.Component<ImageProps, ImageState> {
 
     render(): React.Node {
         const {style: computedStyle} = this;
-        const {preview, style, ...otherProps} = this.props;
+        const {preview, style, defaultSource, ...otherProps} = this.props;
         const {uri, intensity} = this.state;
+        const hasDefaultSource = !!defaultSource;
         const hasPreview = !!preview;
+        const hasURI = !!uri;
         const isImageReady = uri && uri !== preview;
         const opacity = intensity.interpolate({
             inputRange: [0, 100],
@@ -77,9 +83,18 @@ export default class Image extends React.Component<ImageProps, ImageState> {
         return (
             <View {...{style}}>
                 {
+                    (hasDefaultSource && !hasPreview && !hasURI) && (
+                        <RNImage
+                            source={defaultSource}
+                            style={computedStyle}
+                            {...otherProps}
+                        />
+                    )
+                }
+                {
                     hasPreview && !isImageReady && (
                         <RNImage
-                            source={{ uri: preview }}
+                            source={preview}
                             resizeMode="cover"
                             style={computedStyle}
                             blurRadius={Platform.OS === "android" ? 0.5 : 0}
