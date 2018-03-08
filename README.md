@@ -39,7 +39,7 @@ By default, `<Image>` from React Native is used. You can use the `render` proper
 import {Image as RNImage} from "react-native";
 import {Image} from "react-native-expo-image-cache";
 
-<Image style={{ height: 100, width: 100 }} render={(source, style) => <RNImage {...{style, source}} />} />
+<Image style={{ height: 100, width: 100 }} render={(source, style, isPreview) => <RNImage {...{style, source}} />} />
 ```
 
 ### CacheManager
