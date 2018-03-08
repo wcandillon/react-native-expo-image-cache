@@ -10,6 +10,7 @@ import CacheManager from "./CacheManager";
 
 type ImageProps = {
     style?: StyleObj,
+    defaultSource?: ImageSourcePropType,
     preview?: ImageSourcePropType,
     uri: string
 };
@@ -69,9 +70,11 @@ export default class Image extends React.Component<ImageProps, ImageState> {
 
     render(): React.Node {
         const {style: computedStyle} = this;
-        const {preview, style, ...otherProps} = this.props;
+        const {preview, style, defaultSource, ...otherProps} = this.props;
         const {uri, intensity} = this.state;
+        const hasDefaultSource = !!defaultSource;
         const hasPreview = !!preview;
+        const hasURI = !!uri;
         const isImageReady = uri && uri !== preview;
         const opacity = intensity.interpolate({
             inputRange: [0, 100],
@@ -79,7 +82,15 @@ export default class Image extends React.Component<ImageProps, ImageState> {
         });
         return (
             <View {...{style}}>
-
+                {
+                    (hasDefaultSource && !hasPreview && !hasURI) && (
+                        <RNImage
+                            source={defaultSource}
+                            style={computedStyle}
+                            {...otherProps}
+                        />
+                    )
+                }
                 {
                     hasPreview && !isImageReady && (
                         <RNImage
