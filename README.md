@@ -41,7 +41,9 @@ Get the local image from a remote URI
 import {CacheManager} from "react-native-expo-image-cache";
 
 const {uri} = this.props;
-CacheManager.cache(uri, newURI => this.setState({ uri: newURI }));
+const path = CacheManager.get(uri).getPath();
+// if path is undefined, the image download has been cancel
+CacheManager.get(uri).cancel(); // Cancel image download if one is in progress
 ```
 
 You can also clear the local cache:
