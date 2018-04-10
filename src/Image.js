@@ -22,24 +22,19 @@ type ImageState = {
 
 export default class Image extends React.Component<ImageProps, ImageState> {
 
-    subscribedToCache = true;
-
     state = {
         uri: undefined,
         intensity: new Animated.Value(100)
     };
 
-    load({uri}: ImageProps) {
+    async load({uri}: ImageProps): Promise<void> {
         if (uri) {
-            CacheManager.cache(uri, this.setURI);
+            const path = await CacheManager.get(uri).getPath();
+            if (path) {
+                this.setState({ uri: path });
+            }
         }
     }
-
-    setURI = (uri: string) => {
-        if (this.subscribedToCache) {
-            this.setState({ uri });
-        }
-    };
 
     componentDidMount() {
         this.load(this.props);
@@ -58,7 +53,7 @@ export default class Image extends React.Component<ImageProps, ImageState> {
     }
 
     componentWillUnmount() {
-        this.subscribedToCache = false;
+        CacheManager.get(this.props.uri).cancel();
     }
 
     render(): React.Node {
