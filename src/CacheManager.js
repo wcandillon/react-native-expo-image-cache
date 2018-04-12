@@ -1,7 +1,6 @@
 // @flow
 import * as _ from "lodash";
 import {FileSystem} from "expo";
-import {DownloadResumable} from "expo/src/FileSystem";
 import SHA1 from "crypto-js/sha1";
 
 const BASE_DIR = `${FileSystem.cacheDirectory}expo-image-cache/`;
@@ -11,7 +10,6 @@ export class CacheEntry {
     uri: string
     path: string;
     canceled: boolean = false;
-    download: DownloadResumable;
 
     constructor(uri: string) {
         this.uri = uri;
@@ -24,30 +22,16 @@ export class CacheEntry {
             return path;
         }
         this.canceled = false;
-        this.download = FileSystem.createDownloadResumable(uri, tmpPath);
-        try {
-            const result = await this.download.downloadAsync();
-            if (result) {
-                await FileSystem.moveAsync({ from: tmpPath, to: path });
-            }
-            if (!this.canceled) {
-                return path;
-            }
-        } catch (e) {
-            // Do nothing...
+        await FileSystem.downloadAsync(uri, tmpPath);
+        await FileSystem.moveAsync({ from: tmpPath, to: path });
+        if (!this.canceled) {
+            return path;
         }
         return undefined;
     }
 
     async cancel(): Promise<void> {
         this.canceled = true;
-        if (this.download) {
-            try {
-                this.download.pauseAsync();
-            } catch (e) {
-                // Do nothing...
-            }
-        }
     }
 }
 
