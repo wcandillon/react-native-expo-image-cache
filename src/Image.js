@@ -45,7 +45,7 @@ export default class Image extends React.Component<ImageProps, ImageState> {
         const {uri, intensity} = this.state;
         if (this.props.uri !== prevProps.uri) {
             this.load(this.props);
-        } else if (uri && preview && uri !== preview && prevState.uri === undefined) {
+        } else if (uri && preview && prevState.uri === undefined) {
             Animated
                 .timing(intensity, { duration: 300, toValue: 0, useNativeDriver: Platform.OS === "android" })
                 .start();
@@ -61,8 +61,7 @@ export default class Image extends React.Component<ImageProps, ImageState> {
         const {uri, intensity} = this.state;
         const hasDefaultSource = !!defaultSource;
         const hasPreview = !!preview;
-        const hasURI = !!uri;
-        const isImageReady = uri && uri !== preview;
+        const isImageReady = !!uri;
         const opacity = intensity.interpolate({
             inputRange: [0, 100],
             outputRange: [0, 0.5]
@@ -78,7 +77,7 @@ export default class Image extends React.Component<ImageProps, ImageState> {
         return (
             <View {...{style}}>
                 {
-                    (hasDefaultSource && !hasPreview && !hasURI) && (
+                    (hasDefaultSource && !hasPreview && !isImageReady) && (
                         <RNImage
                             source={defaultSource}
                             style={computedStyle}
@@ -87,7 +86,7 @@ export default class Image extends React.Component<ImageProps, ImageState> {
                     )
                 }
                 {
-                    hasPreview && !isImageReady && (
+                    hasPreview && (
                         <RNImage
                             source={preview}
                             resizeMode="cover"
