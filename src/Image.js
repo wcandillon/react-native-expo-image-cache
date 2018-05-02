@@ -21,7 +21,7 @@ type ImageState = {
 };
 
 export default class Image extends React.Component<ImageProps, ImageState> {
-    
+
     mounted = true;
 
     state = {
