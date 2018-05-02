@@ -21,6 +21,8 @@ type ImageState = {
 };
 
 export default class Image extends React.Component<ImageProps, ImageState> {
+    
+    mounted = true;
 
     state = {
         uri: undefined,
@@ -30,7 +32,7 @@ export default class Image extends React.Component<ImageProps, ImageState> {
     async load({uri}: ImageProps): Promise<void> {
         if (uri) {
             const path = await CacheManager.get(uri).getPath();
-            if (path) {
+            if (this.mounted) {
                 this.setState({ uri: path });
             }
         }
@@ -53,7 +55,7 @@ export default class Image extends React.Component<ImageProps, ImageState> {
     }
 
     componentWillUnmount() {
-        CacheManager.get(this.props.uri).cancel();
+        this.mounted = false;
     }
 
     render(): React.Node {
