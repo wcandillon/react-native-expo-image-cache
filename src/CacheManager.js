@@ -9,7 +9,6 @@ export class CacheEntry {
 
     uri: string
     path: string;
-    canceled: boolean = false;
 
     constructor(uri: string) {
         this.uri = uri;
@@ -21,17 +20,9 @@ export class CacheEntry {
         if (exists) {
             return path;
         }
-        this.canceled = false;
         await FileSystem.downloadAsync(uri, tmpPath);
         await FileSystem.moveAsync({ from: tmpPath, to: path });
-        if (!this.canceled) {
-            return path;
-        }
-        return undefined;
-    }
-
-    async cancel(): Promise<void> {
-        this.canceled = true;
+        return path;
     }
 }
 
