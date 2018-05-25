@@ -49,8 +49,34 @@ CacheManager.get(uri).cancel(); // Cancel image download if one is in progress
 You can also clear the local cache:
 
 ```js
-
 import {CacheManager} from "react-native-expo-image-cache";
 
 await CacheManager.clearCache();
+```
+
+
+### Set the cache directory
+
+If you want to work in another cache directory, you can setup the cache directory.
+
+```js
+import {FileSystem} from "expo";
+import {CacheManager, setBaseDir} from "react-native-expo-image-cache";
+
+const uri = "https://www.google.com/favicon.ico"
+setBaseDir(`${FileSystem.cacheDirectory}custom-cache-directoy`);
+await CacheManager.get(uri).getPath(); // Cache the image.
+```
+
+### Remove an entry from the cache
+You can remove a file from cache with it's url like this :
+
+```js
+import {CacheManager, removeCacheEntry} from "react-native-expo-image-cache";
+const uri = "https://www.google.com/favicon.ico"
+// Cache the image & get the images.
+const localUri = await CacheManager.get(uri).getPath();
+// Destroy the cached image
+await removeCacheEntry(uri);
+
 ```
