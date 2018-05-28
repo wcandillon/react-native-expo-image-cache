@@ -28,7 +28,7 @@ export default class Image extends React.Component<ImageProps, ImageState> {
         'light',
         'default',
       ]),
-      transitionDuration: PropTypes.numeral,
+      transitionDuration: PropTypes.number,
     }
 
     static defaultProps = {
