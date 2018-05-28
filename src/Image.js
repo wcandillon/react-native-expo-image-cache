@@ -20,6 +20,11 @@ type ImageState = {
     intensity: Animated.Value
 };
 
+Image.defaultProps = {
+  transitionDuration: 300,
+  tint: 'dark',
+}
+
 export default class Image extends React.Component<ImageProps, ImageState> {
 
     mounted = true;
@@ -49,7 +54,11 @@ export default class Image extends React.Component<ImageProps, ImageState> {
             this.load(this.props);
         } else if (uri && preview && prevState.uri === undefined) {
             Animated
-                .timing(intensity, { duration: props.transitionDuration, toValue: 0, useNativeDriver: Platform.OS === "android" })
+                .timing(intensity, {
+                  duration: props.transitionDuration,
+                  toValue: 0,
+                  useNativeDriver: Platform.OS === "android"
+                })
                 .start();
         }
     }

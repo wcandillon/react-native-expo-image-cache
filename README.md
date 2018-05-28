@@ -1,4 +1,4 @@
-# React Native Image Cache and Progressive Loading
+# React Native Image Cache and Progressive Loading + More custom props
 
 
 [![CircleCI](https://circleci.com/gh/wcandillon/react-native-expo-image-cache.svg?style=svg)](https://circleci.com/gh/wcandillon/react-native-expo-image-cache)
@@ -21,6 +21,14 @@ yarn add react-native-expo-image-cache
 ```
 
 ## Usage
+
+### Props
+
+| prop        | Default     | Options  |
+| ------------- |:-------------:| -----:|
+| tint      | dark | light, dark, default |
+| transitionDuration     | 300      | custom in ms |
+
 
 ### <Image>
 
