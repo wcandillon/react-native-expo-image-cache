@@ -20,12 +20,12 @@ type ImageState = {
     intensity: Animated.Value
 };
 
-Image.defaultProps = {
-  transitionDuration: 300,
-  tint: 'dark',
-}
-
 export default class Image extends React.Component<ImageProps, ImageState> {
+
+    static defaultProps = {
+      transitionDuration: 300,
+      tint: 'dark',
+    }
 
     mounted = true;
 
