@@ -49,7 +49,7 @@ export default class Image extends React.Component<ImageProps, ImageState> {
             this.load(this.props);
         } else if (uri && preview && prevState.uri === undefined) {
             Animated
-                .timing(intensity, { duration: 300, toValue: 0, useNativeDriver: Platform.OS === "android" })
+                .timing(intensity, { duration: props.transitionDuration, toValue: 0, useNativeDriver: Platform.OS === "android" })
                 .start();
         }
     }
@@ -108,7 +108,7 @@ export default class Image extends React.Component<ImageProps, ImageState> {
                 }
                 {
                     hasPreview && Platform.OS === "ios" && (
-                        <AnimatedBlurView tint="dark" style={computedStyle} {...{intensity}} />
+                        <AnimatedBlurView tint={props.tint} style={computedStyle} {...{intensity}} />
                     )
                 }
                 {
