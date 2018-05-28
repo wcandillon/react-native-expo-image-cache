@@ -22,20 +22,6 @@ type ImageState = {
 
 export default class Image extends React.Component<ImageProps, ImageState> {
 
-    static propTypes = {
-      tint: PropTypes.oneOf([
-        'dark',
-        'light',
-        'default',
-      ]),
-      transitionDuration: PropTypes.number,
-    }
-
-    static defaultProps = {
-      transitionDuration: 300,
-      tint: 'dark',
-    }
-
     mounted = true;
 
     state = {
