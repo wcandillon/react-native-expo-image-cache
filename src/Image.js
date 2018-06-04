@@ -48,14 +48,14 @@ export default class Image extends React.Component<ImageProps, ImageState> {
     }
 
     componentDidUpdate(prevProps: ImageProps, prevState: ImageState) {
-        const {preview} = this.props;
+        const {preview, transitionDuration} = this.props;
         const {uri, intensity} = this.state;
         if (this.props.uri !== prevProps.uri) {
             this.load(this.props);
         } else if (uri && preview && prevState.uri === undefined) {
             Animated
                 .timing(intensity, {
-                  duration: this.props.transitionDuration,
+                  duration: transitionDuration,
                   toValue: 0,
                   useNativeDriver: Platform.OS === "android"
                 })
@@ -68,7 +68,7 @@ export default class Image extends React.Component<ImageProps, ImageState> {
     }
 
     render(): React.Node {
-        const {preview, style, defaultSource, ...otherProps} = this.props;
+        const {preview, style, defaultSource, tint, ...otherProps} = this.props;
         const {uri, intensity} = this.state;
         const hasDefaultSource = !!defaultSource;
         const hasPreview = !!preview;
@@ -117,7 +117,7 @@ export default class Image extends React.Component<ImageProps, ImageState> {
                 }
                 {
                     hasPreview && Platform.OS === "ios" && (
-                        <AnimatedBlurView tint={this.props.tint} style={computedStyle} {...{intensity}} />
+                        <AnimatedBlurView style={computedStyle} {...{intensity, tint}} />
                     )
                 }
                 {
