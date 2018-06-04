@@ -3,31 +3,72 @@ import * as _ from "lodash";
 import * as React from "react";
 import {Image as RNImage, Animated, StyleSheet, View, Platform} from "react-native";
 import {BlurView} from "expo";
-import {type StyleObj} from "react-native/Libraries/StyleSheet/StyleSheetTypes";
+import {type ImageStyle} from "react-native/Libraries/StyleSheet/StyleSheetTypes";
 import type {ImageSourcePropType} from "react-native/Libraries/Image/ImageSourcePropType";
 
 import CacheManager from "./CacheManager";
 
 type ImageProps = {
-    style?: StyleObj,
+    style?: ImageStyle,
     defaultSource?: ImageSourcePropType,
     preview?: ImageSourcePropType,
     uri: string
 };
 
 type ImageState = {
-    uri: string,
+    uri: ?string,
     intensity: Animated.Value
 };
 
 export default class Image extends React.Component<ImageProps, ImageState> {
 
-    style: StyleObj;
-    subscribedToCache = true;
+    mounted = true;
 
-    load(props: ImageProps) {
-        const {uri, style} = props;
-        this.style = [
+    state = {
+        uri: undefined,
+        intensity: new Animated.Value(100)
+    };
+
+    async load({uri}: ImageProps): Promise<void> {
+        if (uri) {
+            const path = await CacheManager.get(uri).getPath();
+            if (this.mounted) {
+                this.setState({ uri: path });
+            }
+        }
+    }
+
+    componentDidMount() {
+        this.load(this.props);
+    }
+
+    componentDidUpdate(prevProps: ImageProps, prevState: ImageState) {
+        const {preview} = this.props;
+        const {uri, intensity} = this.state;
+        if (this.props.uri !== prevProps.uri) {
+            this.load(this.props);
+        } else if (uri && preview && prevState.uri === undefined) {
+            Animated
+                .timing(intensity, { duration: 300, toValue: 0, useNativeDriver: Platform.OS === "android" })
+                .start();
+        }
+    }
+
+    componentWillUnmount() {
+        this.mounted = false;
+    }
+
+    render(): React.Node {
+        const {preview, style, defaultSource, ...otherProps} = this.props;
+        const {uri, intensity} = this.state;
+        const hasDefaultSource = !!defaultSource;
+        const hasPreview = !!preview;
+        const isImageReady = !!uri;
+        const opacity = intensity.interpolate({
+            inputRange: [0, 100],
+            outputRange: [0, 0.5]
+        });
+        const computedStyle = [
             StyleSheet.absoluteFill,
             _.transform(
                 _.pickBy(StyleSheet.flatten(style), (value, key) => propsToCopy.indexOf(key) !== -1),
@@ -35,55 +76,10 @@ export default class Image extends React.Component<ImageProps, ImageState> {
                 (result, value, key) => Object.assign(result, { [key]: (value - (style.borderWidth || 0)) })
             )
         ];
-        if (uri) {
-            CacheManager.cache(uri, this.setURI);
-        }
-    }
-
-    componentWillMount() {
-        const intensity = new Animated.Value(100);
-        this.setState({ intensity });
-        this.load(this.props);
-    }
-
-    componentWillReceiveProps(props: ImageProps) {
-        this.load(props);
-    }
-
-    setURI = (uri: string) => {
-        if (this.subscribedToCache) {
-            this.setState({ uri });
-        }
-    };
-
-    componentDidUpdate(prevProps: ImageProps, prevState: ImageState) {
-        const {preview} = this.props;
-        const {uri, intensity} = this.state;
-        if (uri && preview && uri !== preview && prevState.uri === undefined) {
-            Animated.timing(intensity, { duration: 300, toValue: 0, useNativeDriver: true }).start();
-        }
-    }
-
-    componentWillUnmount() {
-        this.subscribedToCache = false;
-    }
-
-    render(): React.Node {
-        const {style: computedStyle} = this;
-        const {preview, style, defaultSource, ...otherProps} = this.props;
-        const {uri, intensity} = this.state;
-        const hasDefaultSource = !!defaultSource;
-        const hasPreview = !!preview;
-        const hasURI = !!uri;
-        const isImageReady = uri && uri !== preview;
-        const opacity = intensity.interpolate({
-            inputRange: [0, 100],
-            outputRange: [0, 0.5]
-        });
         return (
             <View {...{style}}>
                 {
-                    (hasDefaultSource && !hasPreview && !hasURI) && (
+                    (hasDefaultSource && !hasPreview && !isImageReady) && (
                         <RNImage
                             source={defaultSource}
                             style={computedStyle}
@@ -92,7 +88,7 @@ export default class Image extends React.Component<ImageProps, ImageState> {
                     )
                 }
                 {
-                    hasPreview && !isImageReady && (
+                    hasPreview && (
                         <RNImage
                             source={preview}
                             resizeMode="cover"
