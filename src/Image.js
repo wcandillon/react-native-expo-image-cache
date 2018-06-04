@@ -12,7 +12,9 @@ type ImageProps = {
     style?: ImageStyle,
     defaultSource?: ImageSourcePropType,
     preview?: ImageSourcePropType,
-    uri: string
+    uri: string,
+    transitionDuration?: number,
+    tint?: "dark" | "light"
 };
 
 type ImageState = {
@@ -25,9 +27,9 @@ export default class Image extends React.Component<ImageProps, ImageState> {
     mounted = true;
 
     static defaultProps = {
-      transitionDuration: 300,
-      tint: 'dark',
-    }
+        transitionDuration: 300,
+        tint: "dark"
+    };
 
     state = {
         uri: undefined,
@@ -53,13 +55,11 @@ export default class Image extends React.Component<ImageProps, ImageState> {
         if (this.props.uri !== prevProps.uri) {
             this.load(this.props);
         } else if (uri && preview && prevState.uri === undefined) {
-            Animated
-                .timing(intensity, {
-                  duration: transitionDuration,
-                  toValue: 0,
-                  useNativeDriver: Platform.OS === "android"
-                })
-                .start();
+            Animated.timing(intensity, {
+                duration: transitionDuration,
+                toValue: 0,
+                useNativeDriver: Platform.OS === "android"
+            }).start();
         }
     }
 
