@@ -14,7 +14,7 @@ type ImageProps = {
     preview?: ImageSourcePropType,
     uri: string,
     transitionDuration?: number,
-    tintColor?: string
+    tint?: "dark" | "light"
 };
 
 type ImageState = {
@@ -27,7 +27,8 @@ export default class Image extends React.Component<ImageProps, ImageState> {
     mounted = true;
 
     static defaultProps = {
-        transitionDuration: 300
+        transitionDuration: 300,
+        tint: "dark"
     };
 
     state = {
@@ -67,7 +68,7 @@ export default class Image extends React.Component<ImageProps, ImageState> {
     }
 
     render(): React.Node {
-        const {preview, style, defaultSource, tintColor, ...otherProps} = this.props;
+        const {preview, style, defaultSource, tint, ...otherProps} = this.props;
         const {uri, intensity} = this.state;
         const hasDefaultSource = !!defaultSource;
         const hasPreview = !!preview;
@@ -116,12 +117,14 @@ export default class Image extends React.Component<ImageProps, ImageState> {
                 }
                 {
                     hasPreview && Platform.OS === "ios" && (
-                        <AnimatedBlurView style={computedStyle} {...{intensity, tintColor}} />
+                        <AnimatedBlurView style={computedStyle} {...{intensity, tint}} />
                     )
                 }
                 {
                     hasPreview && Platform.OS === "android" && (
-                        <Animated.View style={[computedStyle, { backgroundColor: black, opacity }]} />
+                        <Animated.View
+                            style={[computedStyle, { backgroundColor: tint === "dark" ? black : white, opacity }]}
+                        />
                     )
                 }
             </View>
@@ -130,6 +133,7 @@ export default class Image extends React.Component<ImageProps, ImageState> {
 }
 
 const black = "black";
+const white = "white";
 const propsToCopy = [
     "borderRadius", "borderBottomLeftRadius", "borderBottomRightRadius", "borderTopLeftRadius", "borderTopRightRadius"
 ];
