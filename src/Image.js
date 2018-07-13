@@ -13,6 +13,7 @@ type ImageProps = {
     defaultSource?: ImageSourcePropType,
     preview?: ImageSourcePropType,
     uri: string,
+    headers?: {[string]: string},
     transitionDuration?: number,
     tint?: "dark" | "light"
 };
@@ -36,9 +37,9 @@ export default class Image extends React.Component<ImageProps, ImageState> {
         intensity: new Animated.Value(100)
     };
 
-    async load({uri}: ImageProps): Promise<void> {
+    async load({uri, headers}: ImageProps): Promise<void> {
         if (uri) {
-            const path = await CacheManager.get(uri).getPath();
+            const path = await CacheManager.get(uri, headers).getPath();
             if (this.mounted) {
                 this.setState({ uri: path });
             }
