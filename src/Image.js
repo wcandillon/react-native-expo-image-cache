@@ -12,14 +12,13 @@ type ImageProps = {
     style?: ImageStyle,
     defaultSource?: ImageSourcePropType,
     preview?: ImageSourcePropType,
-    uri: string,
-    headers?: {[string]: string},
+    source: ImageSourcePropType,
     transitionDuration?: number,
     tint?: "dark" | "light"
 };
 
 type ImageState = {
-    uri: ?string,
+    source: ?ImageSourcePropType,
     intensity: Animated.Value
 };
 
@@ -33,29 +32,35 @@ export default class Image extends React.Component<ImageProps, ImageState> {
     };
 
     state = {
-        uri: undefined,
+        source: undefined,
         intensity: new Animated.Value(100)
     };
 
-    async load({uri, headers}: ImageProps): Promise<void> {
+    async load(source: ImageSourcePropType): Promise<void> {
+        const {uri, headers} = source;
         if (uri) {
             const path = await CacheManager.get(uri, headers).getPath();
             if (this.mounted) {
-                this.setState({ uri: path });
+                this.setState({
+                    source: {
+                        ...source,
+                        uri: path
+                    }
+                });
             }
         }
     }
 
     componentDidMount() {
-        this.load(this.props);
+        this.load(this.props.source);
     }
 
     componentDidUpdate(prevProps: ImageProps, prevState: ImageState) {
         const {preview, transitionDuration} = this.props;
-        const {uri, intensity} = this.state;
-        if (this.props.uri !== prevProps.uri) {
-            this.load(this.props);
-        } else if (uri && preview && prevState.uri === undefined) {
+        const {source, intensity} = this.state;
+        if (this.props.source !== prevProps.source) {
+            this.load(this.props.source);
+        } else if (source && preview && prevState.source === undefined) {
             Animated.timing(intensity, {
                 duration: transitionDuration,
                 toValue: 0,
@@ -70,10 +75,11 @@ export default class Image extends React.Component<ImageProps, ImageState> {
 
     render(): React.Node {
         const {preview, style, defaultSource, tint, ...otherProps} = this.props;
-        const {uri, intensity} = this.state;
+        delete otherProps.source;
+        const {source, intensity} = this.state;
         const hasDefaultSource = !!defaultSource;
         const hasPreview = !!preview;
-        const isImageReady = !!uri;
+        const isImageReady = !!source;
         const opacity = intensity.interpolate({
             inputRange: [0, 100],
             outputRange: [0, 0.5]
@@ -110,7 +116,7 @@ export default class Image extends React.Component<ImageProps, ImageState> {
                 {
                     isImageReady && (
                         <RNImage
-                            source={{ uri }}
+                            source={source}
                             style={computedStyle}
                             {...otherProps}
                         />
