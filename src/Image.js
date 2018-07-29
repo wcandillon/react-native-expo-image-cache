@@ -75,6 +75,7 @@ export default class Image extends React.Component<ImageProps, ImageState> {
 
     render(): React.Node {
         const {preview, style, defaultSource, tint, ...otherProps} = this.props;
+        // Prevent overwriting source from state
         delete otherProps.source;
         const {source, intensity} = this.state;
         const hasDefaultSource = !!defaultSource;
