@@ -20,7 +20,7 @@ export class CacheEntry {
     }
     async createBaseDir() {
       const BASE_DIR = getBaseDir();
-      const { exists, isDirectory } = Expo.FileSystem.getInfoAsync(BASE_DIR);
+      const { exists, isDirectory } = FileSystem.getInfoAsync(BASE_DIR);
       if(!exists){
         await FileSystem.makeDirectoryAsync(BASE_DIR, {intermediates: true});
       }
