@@ -18,6 +18,7 @@ export class CacheEntry {
     constructor(uri: string) {
         this.uri = uri;
     }
+
     async createBaseDir() {
       const BASE_DIR = getBaseDir();
       const { exists, isDirectory } = FileSystem.getInfoAsync(BASE_DIR);
@@ -34,8 +35,18 @@ export class CacheEntry {
         }
 
         this.createBaseDir();
-        await FileSystem.downloadAsync(uri, tmpPath);
-        await FileSystem.moveAsync({ from: tmpPath, to: path });
+        try{
+          await FileSystem.downloadAsync(uri, tmpPath);
+        }catch(err){
+          console.error('Can not download ', {uri, tmpPath});
+          throw err;
+        }
+        try{
+          await FileSystem.moveAsync({ from: tmpPath, to: path });
+        }catch(err){
+          console.error('Can not move ', {from: tmpPath, to: path});
+          throw err;
+        }
         return path;
     }
 }
