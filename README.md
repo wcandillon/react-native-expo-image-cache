@@ -22,6 +22,14 @@ yarn add react-native-expo-image-cache
 
 ## Usage
 
+### Props
+
+| Props        | Default     | Options  |
+| ------------- |:-------------:| -----:|
+| tint      | dark | light, dark, default |
+| transitionDuration     | 300      | custom in ms |
+
+
 ### <Image>
 
 ```js
