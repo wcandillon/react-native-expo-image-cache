@@ -1,7 +1,7 @@
 // @flow
 import * as _ from "lodash";
 import {FileSystem} from "expo";
-import SHA1 from "crypto-js/sha1";
+import MD5 from "crypto-js/md5";
 
 let _baseDir = `${FileSystem.cacheDirectory}expo-image-cache/`;
 const getBaseDir = (): string => _baseDir;
@@ -78,7 +78,7 @@ export default class CacheManager {
 const getCacheKey = (uri: string): { [key: string]: string, [ext: string]: string } => {
     const filename = uri.substring(uri.lastIndexOf("/"), uri.indexOf("?") === -1 ? uri.length : uri.indexOf("?"));
     const ext = filename.indexOf(".") === -1 ? ".jpg" : filename.substring(filename.lastIndexOf("."));
-    return {key: 'I' + SHA1(uri), ext};
+    return {key: 'I' + MD5(uri), ext};
 };
 
 /**
@@ -87,7 +87,6 @@ const getCacheKey = (uri: string): { [key: string]: string, [ext: string]: strin
  */
 export const removeCacheEntry = async (uri: string): Promise => {
     const {ext, key} = getCacheKey(uri);
-    console.log('remove cache entry', uri);
     return FileSystem.deleteAsync(
         `${getBaseDir()}${key}${ext}`,
         {idempotent: true}
