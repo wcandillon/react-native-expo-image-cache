@@ -20,7 +20,8 @@ export class CacheEntry {
         if (exists) {
             return path;
         }
-        await FileSystem.downloadAsync(uri, tmpPath);
+
+        await FileSystem.createDownloadResumable(uri, tmpPath, option).downloadAsync();
         await FileSystem.moveAsync({ from: tmpPath, to: path });
         return path;
     }
