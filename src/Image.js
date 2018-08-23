@@ -32,6 +32,7 @@ export default class Image extends React.Component<ImageProps, ImageState> {
     async load({uri}: ImageProps): Promise<void> {
         if (uri) {
             const path = await CacheManager.get(uri).getPath();
+            console.log('load uri', uri);
             if (this.mounted) {
                 this.setState({ uri: path });
             }

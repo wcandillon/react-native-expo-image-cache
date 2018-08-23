@@ -23,7 +23,12 @@ export class CacheEntry {
       const BASE_DIR = getBaseDir();
       const { exists, isDirectory } = FileSystem.getInfoAsync(BASE_DIR);
       if(!exists){
-        await FileSystem.makeDirectoryAsync(BASE_DIR, {intermediates: true});
+        try{
+          await FileSystem.makeDirectoryAsync(BASE_DIR, {intermediates: true});
+        }catch(err){
+          console.error('Can not create ', {uri, tmpPath});
+          throw err;
+        }
       }
     }
 
@@ -58,6 +63,7 @@ export default class CacheManager {
     static get(uri: string): CacheEntry {
         if (!CacheManager.entries[uri]) {
             CacheManager.entries[uri] = new CacheEntry(uri);
+            console.log('CacheManager#get(', uri, ')', CacheManager.entries[uri]);
         }
         return CacheManager.entries[uri];
     }
@@ -72,7 +78,7 @@ export default class CacheManager {
 const getCacheKey = (uri: string): { [key: string]: string, [ext: string]: string } => {
     const filename = uri.substring(uri.lastIndexOf("/"), uri.indexOf("?") === -1 ? uri.length : uri.indexOf("?"));
     const ext = filename.indexOf(".") === -1 ? ".jpg" : filename.substring(filename.lastIndexOf("."));
-    return {key: SHA1(uri), ext};
+    return {key: 'I' + SHA1(uri), ext};
 };
 
 /**
@@ -81,6 +87,7 @@ const getCacheKey = (uri: string): { [key: string]: string, [ext: string]: strin
  */
 export const removeCacheEntry = async (uri: string): Promise => {
     const {ext, key} = getCacheKey(uri);
+    console.log('remove cache entry', uri);
     return FileSystem.deleteAsync(
         `${getBaseDir()}${key}${ext}`,
         {idempotent: true}
@@ -97,8 +104,15 @@ const getCacheEntry = async (uri: string): Promise<{ exists: boolean, path: stri
         await FileSystem.makeDirectoryAsync(BASE_DIR);
     } catch (e) {
         // do nothing
+        console.log('Error:FileSystem.makeDirectoryAsync', e);
     }
-    const info = await FileSystem.getInfoAsync(path);
-    const {exists} = info;
-    return { exists, path, tmpPath };
+    let info = null;
+     try{
+       info = await FileSystem.getInfoAsync(path);
+       const {exists} = info;
+       return { exists, path, tmpPath };
+     }catch(e){
+       console.log('Error:FileSystem.getInfoAsync(', path , ')', e);
+     }
+     return { exists: false, path, tmpPath };
 };
