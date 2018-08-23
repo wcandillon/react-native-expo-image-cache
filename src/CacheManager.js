@@ -26,7 +26,7 @@ export class CacheEntry {
         try{
           await FileSystem.makeDirectoryAsync(BASE_DIR, {intermediates: true});
         }catch(err){
-          console.error('Can not create ', {uri, tmpPath});
+          console.log('⚠️ Can not create ', {uri, tmpPath});
           throw err;
         }
       }
@@ -43,13 +43,13 @@ export class CacheEntry {
         try{
           await FileSystem.downloadAsync(uri, tmpPath);
         }catch(err){
-          console.error('Can not download ', {uri, tmpPath});
+          console.log('⚠️ Can not download ', {uri, tmpPath});
           throw err;
         }
         try{
           await FileSystem.moveAsync({ from: tmpPath, to: path });
         }catch(err){
-          console.error('Can not move ', {from: tmpPath, to: path});
+          console.log('⚠️ Can not move ', {from: tmpPath, to: path});
           throw err;
         }
         return path;
@@ -103,7 +103,6 @@ const getCacheEntry = async (uri: string): Promise<{ exists: boolean, path: stri
         await FileSystem.makeDirectoryAsync(BASE_DIR);
     } catch (e) {
         // do nothing
-        console.log('Error:FileSystem.makeDirectoryAsync', e);
     }
     let info = null;
      try{
