@@ -26,14 +26,12 @@ export class CacheEntry {
         try{
           await FileSystem.makeDirectoryAsync(BASE_DIR, {intermediates: true});
         }catch(err){
-          // console.log('⚠️ Can not create ', {uri, tmpPath});
         }
       }
     }
 
     async getPath(): Promise<?string> {
         const {uri} = this;
-        console.log('get path for ', uri);
         const {path, exists, tmpPath} = await getCacheEntry(uri);
         if (exists) {
             return path;
@@ -59,7 +57,6 @@ export default class CacheManager {
     static entries: { [uri: string]: CacheEntry } = {};
 
     static get(uri: string): CacheEntry {
-        console.log('CacheManager#get(', uri, ') ?', CacheManager.entries[uri]);
         if (!CacheManager.entries[uri]) {
             CacheManager.entries[uri] = new CacheEntry(uri);
         }
@@ -67,7 +64,6 @@ export default class CacheManager {
     }
 
     static async clearCache(): Promise<void> {
-        console.log('CacheManager#clearCache');
         const BASE_DIR = getBaseDir();
         await FileSystem.deleteAsync(BASE_DIR, { idempotent: true });
         await FileSystem.makeDirectoryAsync(BASE_DIR);
@@ -75,7 +71,6 @@ export default class CacheManager {
 }
 
 const getCacheKey = (uri: string): { [key: string]: string, [ext: string]: string } => {
-    console.log('CacheManager#getCacheKey', uri);
     const filename = uri.substring(uri.lastIndexOf("/"), uri.indexOf("?") === -1 ? uri.length : uri.indexOf("?"));
     const ext = filename.indexOf(".") === -1 ? ".jpg" : filename.substring(filename.lastIndexOf("."));
     return {key: 'I' + MD5(uri), ext};
@@ -110,7 +105,6 @@ const getCacheEntry = async (uri: string): Promise<{ exists: boolean, path: stri
        const {exists} = info;
        return { exists, path, tmpPath };
      }catch(e){
-       console.log('Error:FileSystem.getInfoAsync(', path , ')', e);
      }
      return { exists: false, path, tmpPath };
 };
