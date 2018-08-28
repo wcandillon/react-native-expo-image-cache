@@ -20,7 +20,10 @@ export class CacheEntry {
         if (exists) {
             return path;
         }
-        await FileSystem.downloadAsync(uri, tmpPath);
+        const { status } = await FileSystem.downloadAsync(uri, tmpPath);
+        if (status !== 200) {
+            return undefined;
+        }
         await FileSystem.moveAsync({ from: tmpPath, to: path });
         return path;
     }
