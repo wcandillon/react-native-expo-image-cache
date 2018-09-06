@@ -38,6 +38,7 @@
         ],
         "import/prefer-default-export": 0,
         "import/no-duplicates": 2,
+        "react/require-default-props": 0,
         "react/sort-comp": 0,
         "react/no-array-index-key": 0,
         "react/jsx-filename-extension": [
