@@ -3,26 +3,30 @@ import * as _ from "lodash";
 import {FileSystem} from "expo";
 import SHA1 from "crypto-js/sha1";
 
+export type DownloadOptions = {
+  md5?: boolean,
+  headers?: { [string]: string }
+};
+
 const BASE_DIR = `${FileSystem.cacheDirectory}expo-image-cache/`;
 
 export class CacheEntry {
 
     uri: string;
-    options: {};
+    options: DownloadOptions;
     path: string;
 
-    constructor(uri: string, options: {}) {
+    constructor(uri: string, options: DownloadOptions) {
         this.uri = uri;
         this.options = options;
     }
 
     async getPath(): Promise<?string> {
-        const {uri,options} = this;
+        const {uri, options} = this;
         const {path, exists, tmpPath} = await getCacheEntry(uri);
         if (exists) {
             return path;
         }
-
         await FileSystem.createDownloadResumable(uri, tmpPath, options).downloadAsync();
         await FileSystem.moveAsync({ from: tmpPath, to: path });
         return path;
@@ -33,7 +37,7 @@ export default class CacheManager {
 
     static entries: { [uri: string]: CacheEntry } = {};
 
-    static get(uri: string, options: {}): CacheEntry {
+    static get(uri: string, options: DownloadOptions): CacheEntry {
         if (!CacheManager.entries[uri]) {
             CacheManager.entries[uri] = new CacheEntry(uri, options);
         }

@@ -6,13 +6,13 @@ import {BlurView} from "expo";
 import {type ImageStyle} from "react-native/Libraries/StyleSheet/StyleSheetTypes";
 import type {ImageSourcePropType} from "react-native/Libraries/Image/ImageSourcePropType";
 
-import CacheManager from "./CacheManager";
+import CacheManager, {type DownloadOptions} from "./CacheManager";
 
 type ImageProps = {
     style?: ImageStyle,
     defaultSource?: ImageSourcePropType,
     preview?: ImageSourcePropType,
-    options?: {},
+    options?: DownloadOptions,
     uri: string,
     transitionDuration?: number,
     tint?: "dark" | "light"
