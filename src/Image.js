@@ -3,15 +3,16 @@ import * as _ from "lodash";
 import * as React from "react";
 import {Image as RNImage, Animated, StyleSheet, View, Platform} from "react-native";
 import {BlurView} from "expo";
-import {type ImageStyle} from "react-native/Libraries/StyleSheet/StyleSheetTypes";
+import { type ____ImageStyleProp_Internal as ImageStyle } from "react-native/Libraries/StyleSheet/StyleSheetTypes";
 import type {ImageSourcePropType} from "react-native/Libraries/Image/ImageSourcePropType";
 
-import CacheManager from "./CacheManager";
+import CacheManager, {type DownloadOptions} from "./CacheManager";
 
 type ImageProps = {
     style?: ImageStyle,
     defaultSource?: ImageSourcePropType,
     preview?: ImageSourcePropType,
+    options?: DownloadOptions,
     uri: string,
     transitionDuration?: number,
     tint?: "dark" | "light"
@@ -36,9 +37,9 @@ export default class Image extends React.Component<ImageProps, ImageState> {
         intensity: new Animated.Value(100)
     };
 
-    async load({uri}: ImageProps): Promise<void> {
+    async load({uri, options = {}}: ImageProps): Promise<void> {
         if (uri) {
-            const path = await CacheManager.get(uri).getPath();
+            const path = await CacheManager.get(uri, options).getPath();
             if (this.mounted) {
                 this.setState({ uri: path });
             }

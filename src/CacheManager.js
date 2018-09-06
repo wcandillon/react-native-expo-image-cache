@@ -3,24 +3,35 @@ import * as _ from "lodash";
 import {FileSystem} from "expo";
 import SHA1 from "crypto-js/sha1";
 
+export type DownloadOptions = {
+  md5?: boolean,
+  headers?: { [string]: string }
+};
+
 const BASE_DIR = `${FileSystem.cacheDirectory}expo-image-cache/`;
 
 export class CacheEntry {
 
-    uri: string
+    uri: string;
+    options: DownloadOptions;
     path: string;
 
-    constructor(uri: string) {
+    constructor(uri: string, options: DownloadOptions) {
         this.uri = uri;
+        this.options = options;
     }
 
     async getPath(): Promise<?string> {
-        const {uri} = this;
+        const {uri, options} = this;
         const {path, exists, tmpPath} = await getCacheEntry(uri);
         if (exists) {
             return path;
         }
-        await FileSystem.downloadAsync(uri, tmpPath);
+        const result = await FileSystem.createDownloadResumable(uri, tmpPath, options).downloadAsync();
+        // If the image download failed, we don't cache anything
+        if (result && result.status !== 200) {
+            return undefined;
+        }
         await FileSystem.moveAsync({ from: tmpPath, to: path });
         return path;
     }
@@ -30,9 +41,9 @@ export default class CacheManager {
 
     static entries: { [uri: string]: CacheEntry } = {};
 
-    static get(uri: string): CacheEntry {
+    static get(uri: string, options: DownloadOptions): CacheEntry {
         if (!CacheManager.entries[uri]) {
-            CacheManager.entries[uri] = new CacheEntry(uri);
+            CacheManager.entries[uri] = new CacheEntry(uri, options);
         }
         return CacheManager.entries[uri];
     }
@@ -40,6 +51,10 @@ export default class CacheManager {
     static async clearCache(): Promise<void> {
         await FileSystem.deleteAsync(BASE_DIR, { idempotent: true });
         await FileSystem.makeDirectoryAsync(BASE_DIR);
+    }
+    static async getCacheSize(): Promise<number> {
+        const {size} = await FileSystem.getInfoAsync(BASE_DIR, {size: true});
+        return size;
     }
 }
 
