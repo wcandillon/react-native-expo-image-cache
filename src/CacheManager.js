@@ -7,20 +7,23 @@ const BASE_DIR = `${FileSystem.cacheDirectory}expo-image-cache/`;
 
 export class CacheEntry {
 
-    uri: string
+    uri: string;
+    options: {};
     path: string;
 
-    constructor(uri: string) {
+    constructor(uri: string, options: {}) {
         this.uri = uri;
+        this.options = options;
     }
 
     async getPath(): Promise<?string> {
-        const {uri} = this;
+        const {uri,options} = this;
         const {path, exists, tmpPath} = await getCacheEntry(uri);
         if (exists) {
             return path;
         }
-        await FileSystem.downloadAsync(uri, tmpPath);
+
+        await FileSystem.createDownloadResumable(uri, tmpPath, options).downloadAsync();
         await FileSystem.moveAsync({ from: tmpPath, to: path });
         return path;
     }
@@ -30,9 +33,9 @@ export default class CacheManager {
 
     static entries: { [uri: string]: CacheEntry } = {};
 
-    static get(uri: string): CacheEntry {
+    static get(uri: string, options: {}): CacheEntry {
         if (!CacheManager.entries[uri]) {
-            CacheManager.entries[uri] = new CacheEntry(uri);
+            CacheManager.entries[uri] = new CacheEntry(uri, options);
         }
         return CacheManager.entries[uri];
     }
