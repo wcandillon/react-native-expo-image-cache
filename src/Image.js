@@ -3,7 +3,7 @@ import * as _ from "lodash";
 import * as React from "react";
 import {Image as RNImage, Animated, StyleSheet, View, Platform} from "react-native";
 import {BlurView} from "expo";
-import {type ImageStyle} from "react-native/Libraries/StyleSheet/StyleSheetTypes";
+import { type ____ImageStyleProp_Internal as ImageStyle } from "react-native/Libraries/StyleSheet/StyleSheetTypes";
 import type {ImageSourcePropType} from "react-native/Libraries/Image/ImageSourcePropType";
 
 import CacheManager, {type DownloadOptions} from "./CacheManager";
