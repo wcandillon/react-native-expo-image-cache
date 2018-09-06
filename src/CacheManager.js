@@ -27,7 +27,11 @@ export class CacheEntry {
         if (exists) {
             return path;
         }
-        await FileSystem.createDownloadResumable(uri, tmpPath, options).downloadAsync();
+        const result = await FileSystem.createDownloadResumable(uri, tmpPath, options).downloadAsync();
+        // If the image download failed, we don't cache anything
+        if (result && result.status !== 200) {
+            return undefined;
+        }
         await FileSystem.moveAsync({ from: tmpPath, to: path });
         return path;
     }
