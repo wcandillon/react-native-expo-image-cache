@@ -52,6 +52,10 @@ export default class CacheManager {
         await FileSystem.deleteAsync(BASE_DIR, { idempotent: true });
         await FileSystem.makeDirectoryAsync(BASE_DIR);
     }
+    static async getCacheSize(): Promise<number> {
+        const {size} = await FileSystem.getInfoAsync(BASE_DIR, {size: true});
+        return size;
+    }
 }
 
 const getCacheEntry = async (uri: string): Promise<{ exists: boolean, path: string, tmpPath: string }> => {
