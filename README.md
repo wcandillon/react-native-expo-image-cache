@@ -50,8 +50,7 @@ import {CacheManager} from "react-native-expo-image-cache";
 
 const {uri} = this.props;
 const path = CacheManager.get(uri).getPath();
-// if path is undefined, the image download has been cancel
-CacheManager.get(uri).cancel(); // Cancel image download if one is in progress
+// if path is undefined, the image download has been 
 ```
 
 You can also clear the local cache:
