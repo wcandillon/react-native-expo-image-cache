@@ -73,6 +73,7 @@ export default class Image extends React.Component<ImageProps, ImageState> {
         const {uri, intensity} = this.state;
         const hasDefaultSource = !!defaultSource;
         const hasPreview = !!preview;
+        const previewSource = typeof preview === "string" ? { uri: preview } : preview;
         const isImageReady = !!uri;
         const opacity = intensity.interpolate({
             inputRange: [0, 100],
@@ -100,7 +101,7 @@ export default class Image extends React.Component<ImageProps, ImageState> {
                 {
                     hasPreview && (
                         <RNImage
-                            source={preview}
+                            source={previewSource}
                             resizeMode="cover"
                             style={computedStyle}
                             blurRadius={Platform.OS === "android" ? 0.5 : 0}
