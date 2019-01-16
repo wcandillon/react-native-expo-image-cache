@@ -26,6 +26,7 @@ type ImageState = {
 export default class Image extends React.Component<ImageProps, ImageState> {
 
     mounted = true;
+    loading = 0;
 
     static defaultProps = {
         transitionDuration: 300,
@@ -39,7 +40,17 @@ export default class Image extends React.Component<ImageProps, ImageState> {
 
     async load({uri, options = {}}: ImageProps): Promise<void> {
         if (uri) {
-            const path = await CacheManager.get(uri, options).getPath();
+            this.loading += 1;
+            let path;
+            try {
+                path = await CacheManager.get(uri, options).getPath();
+                this.loading -= 1;
+            } catch (e) {
+                this.loading -= 1;
+            }
+            if (this.loading !== 0) {
+                return;
+            }
             if (this.mounted) {
                 this.setState({ uri: path });
             }
