@@ -15,7 +15,8 @@ type ImageProps = {
     options?: DownloadOptions,
     uri: string,
     transitionDuration?: number,
-    tint?: "dark" | "light"
+    tint?: "dark" | "light",
+    onLoad? Function
 };
 
 type ImageState = {
@@ -42,6 +43,7 @@ export default class Image extends React.Component<ImageProps, ImageState> {
             const path = await CacheManager.get(uri, options).getPath();
             if (this.mounted) {
                 this.setState({ uri: path });
+                this.props.onLoad && this.props.onLoad(path);
             }
         }
     }
