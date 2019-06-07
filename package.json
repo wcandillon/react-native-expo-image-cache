@@ -51,7 +51,6 @@
     "peerDependencies": {
         "expo": "*",
         "expo-blur": "*",
-        "expo-constants": "*",
         "expo-file-system": "*",
         "react": "*",
         "react-native": "*"
