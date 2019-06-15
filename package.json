@@ -1,13 +1,15 @@
 {
   "name": "react-native-expo-image-cache",
-  "version": "3.2.0",
+  "version": "4.0.0",
   "description": "React Native Image Cache and Progressive Loading based on Expo",
-  "main": "dist/src/index.js",
+  "main": "src/index.js",
   "files": [
+    "src",
     "dist"
   ],
   "scripts": {
-
+    "prepare": "bob build",
+    "tsc": "tsc"
   },
   "repository": {
     "type": "git",
@@ -25,14 +27,27 @@
   },
   "homepage": "https://github.com/wcandillon/react-native-expo-image-cache#readme",
   "devDependencies": {
-
+    "@types/react": "^16.8.20",
+    "@types/react-native": "^0.57.63",
+    "eslint": "^5.16.0",
+    "eslint-config-react-native-wcandillon": "^1.2.2"
   },
   "dependencies": {
+    "crypto-js": "^3.1.9-1",
     "lodash": "^4.17.4"
   },
   "peerDependencies": {
     "expo": "*",
     "react": "*",
     "react-native": "*"
+  },
+  "react-native": "src/index.js",
+  "types": "dist/typescript/src/index.d.ts",
+  "@react-native-community/bob": {
+    "source": "src",
+    "output": "dist",
+    "targets": [
+      "typescript"
+    ]
   }
 }

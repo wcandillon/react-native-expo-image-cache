@@ -1,19 +1,20 @@
 // @flow
 import * as _ from "lodash";
-import {FileSystem} from "expo";
+import * as FileSystem from "expo-file-system";
 import SHA1 from "crypto-js/sha1";
 
-export type DownloadOptions = {
-  md5?: boolean,
-  headers?: { [string]: string }
-};
+export interface DownloadOptions {
+    md5?: boolean;
+    headers?: { [name: string]: string };
+}
 
 const BASE_DIR = `${FileSystem.cacheDirectory}expo-image-cache/`;
 
 export class CacheEntry {
-
     uri: string;
+
     options: DownloadOptions;
+
     path: string;
 
     constructor(uri: string, options: DownloadOptions) {
@@ -21,9 +22,9 @@ export class CacheEntry {
         this.options = options;
     }
 
-    async getPath(): Promise<?string> {
-        const {uri, options} = this;
-        const {path, exists, tmpPath} = await getCacheEntry(uri);
+    async getPath(): Promise<string | undefined> {
+        const { uri, options } = this;
+        const { path, exists, tmpPath } = await getCacheEntry(uri);
         if (exists) {
             return path;
         }
@@ -38,7 +39,6 @@ export class CacheEntry {
 }
 
 export default class CacheManager {
-
     static entries: { [uri: string]: CacheEntry } = {};
 
     static get(uri: string, options: DownloadOptions): CacheEntry {
@@ -52,13 +52,14 @@ export default class CacheManager {
         await FileSystem.deleteAsync(BASE_DIR, { idempotent: true });
         await FileSystem.makeDirectoryAsync(BASE_DIR);
     }
+
     static async getCacheSize(): Promise<number> {
-        const {size} = await FileSystem.getInfoAsync(BASE_DIR, {size: true});
+        const { size } = await FileSystem.getInfoAsync(BASE_DIR, { size: true });
         return size;
     }
 }
 
-const getCacheEntry = async (uri: string): Promise<{ exists: boolean, path: string, tmpPath: string }> => {
+const getCacheEntry = async (uri: string): Promise<{ exists: boolean; path: string; tmpPath: string }> => {
     const filename = uri.substring(uri.lastIndexOf("/"), uri.indexOf("?") === -1 ? uri.length : uri.indexOf("?"));
     const ext = filename.indexOf(".") === -1 ? ".jpg" : filename.substring(filename.lastIndexOf("."));
     const path = `${BASE_DIR}${SHA1(uri)}${ext}`;
@@ -70,6 +71,6 @@ const getCacheEntry = async (uri: string): Promise<{ exists: boolean, path: stri
         // do nothing
     }
     const info = await FileSystem.getInfoAsync(path);
-    const {exists} = info;
+    const { exists } = info;
     return { exists, path, tmpPath };
 };
