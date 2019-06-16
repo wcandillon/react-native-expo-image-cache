@@ -16,6 +16,14 @@
     esutils "^2.0.2"
     js-tokens "^4.0.0"
 
+"@types/crypto-js@^3.1.43":
+  version "3.1.43"
+  resolved "https://registry.yarnpkg.com/@types/crypto-js/-/crypto-js-3.1.43.tgz#b859347d6289ba13e347c335a4c9efa63337a748"
+
+"@types/lodash@^4.14.134":
+  version "4.14.134"
+  resolved "https://registry.yarnpkg.com/@types/lodash/-/lodash-4.14.134.tgz#9032b440122db3a2a56200e91191996161dde5b9"
+
 "@types/prop-types@*":
   version "15.7.1"
   resolved "https://registry.yarnpkg.com/@types/prop-types/-/prop-types-15.7.1.tgz#f1a11e7babb0c3cad68100be381d1e064c68f1f6"
@@ -517,6 +525,18 @@ esutils@^2.0.2:
   version "2.0.2"
   resolved "https://registry.yarnpkg.com/esutils/-/esutils-2.0.2.tgz#0abf4f1caa5bcb1f7a9d8acc6dea4faaa04bac9b"
 
+expo-blur@^5.0.1:
+  version "5.0.1"
+  resolved "https://registry.yarnpkg.com/expo-blur/-/expo-blur-5.0.1.tgz#39edbb391965ec3b426ded6b869618d8294dd56c"
+  dependencies:
+    prop-types "^15.6.0"
+
+expo-file-system@^5.0.1:
+  version "5.0.1"
+  resolved "https://registry.yarnpkg.com/expo-file-system/-/expo-file-system-5.0.1.tgz#c26054e512c3bb2e256325b48e603957a24e6210"
+  dependencies:
+    uuid-js "^0.7.5"
+
 external-editor@^3.0.3:
   version "3.0.3"
   resolved "https://registry.yarnpkg.com/external-editor/-/external-editor-3.0.3.tgz#5866db29a97826dbe4bf3afd24070ead9ea43a27"
@@ -1004,7 +1024,7 @@ progress@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/progress/-/progress-2.0.0.tgz#8a1be366bf8fc23db2bd23f10c6fe920b4389d1f"
 
-prop-types@^15.7.2:
+prop-types@^15.6.0, prop-types@^15.7.2:
   version "15.7.2"
   resolved "https://registry.yarnpkg.com/prop-types/-/prop-types-15.7.2.tgz#52c41e75b8c87e72b9d9360e0206b99dcbffa6c5"
   dependencies:
@@ -1237,6 +1257,10 @@ uri-js@^4.2.2:
   resolved "https://registry.yarnpkg.com/uri-js/-/uri-js-4.2.2.tgz#94c540e1ff772956e2299507c010aea6c8838eb0"
   dependencies:
     punycode "^2.1.0"
+
+uuid-js@^0.7.5:
+  version "0.7.5"
+  resolved "https://registry.yarnpkg.com/uuid-js/-/uuid-js-0.7.5.tgz#6c886d02a53d2d40dcf25d91a170b4a7b25b94d0"
 
 validate-npm-package-license@^3.0.1:
   version "3.0.4"
