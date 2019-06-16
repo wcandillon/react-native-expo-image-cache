@@ -1,8 +1,8 @@
 {
   "name": "react-native-expo-image-cache",
-  "version": "4.0.0",
+  "version": "4.0.1",
   "description": "React Native Image Cache and Progressive Loading based on Expo",
-  "main": "src/index.js",
+  "main": "dist/src/index.js",
   "files": [
     "src",
     "dist"
