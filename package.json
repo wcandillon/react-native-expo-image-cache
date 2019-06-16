@@ -9,7 +9,7 @@
   ],
   "scripts": {
     "prepare": "bob build",
-    "tsc": "tsc",
+    "tsc": "tsc --noEmit",
     "lint": "eslint src/**/*"
   },
   "repository": {
