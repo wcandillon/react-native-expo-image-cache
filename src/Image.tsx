@@ -98,9 +98,9 @@ export default class Image extends React.Component<ImageProps, ImageState> {
         {!!preview && (
           <RNImage
             source={preview}
-            resizeMode="cover"
             style={computedStyle}
             blurRadius={Platform.OS === "android" ? 0.5 : 0}
+            {...otherProps}
           />
         )}
         {isImageReady && <RNImage source={{ uri }} style={computedStyle} {...otherProps} />}
