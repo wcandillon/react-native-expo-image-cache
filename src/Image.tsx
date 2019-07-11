@@ -24,7 +24,7 @@ interface ImageProps {
   uri: string;
   transitionDuration?: number;
   tint?: "dark" | "light";
-  onError: (err: Error) => void;
+  onError: (error: {nativeEvent: {error: Error}}) => void,
 }
 
 interface ImageState {
