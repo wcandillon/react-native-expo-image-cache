@@ -1,17 +1,18 @@
 {
   "name": "react-native-expo-image-cache",
-  "version": "3.2.0",
+  "version": "4.0.5",
   "description": "React Native Image Cache and Progressive Loading based on Expo",
-  "main": "dist/src/index.js",
+  "main": "dist/module/index.js",
+  "react-native": "dist/module/index.js",
+  "types": "dist/typescript/src/index.d.ts",
   "files": [
+    "src",
     "dist"
   ],
   "scripts": {
-    "compile": "rm -rf dist/* && babel . --out-dir dist --ignore node_modules,dist --source-maps",
-    "flow": "flow check --show-all-errors | flow-result-checker",
-    "lint": "eslint App.js src/",
-    "test": "yarn lint && yarn flow",
-    "prepare": "npm run compile && install-self-peers -- --ignore-scripts"
+    "prepare": "bob build",
+    "tsc": "tsc --noEmit",
+    "lint": "eslint src/**/*"
   },
   "repository": {
     "type": "git",
@@ -29,28 +30,32 @@
   },
   "homepage": "https://github.com/wcandillon/react-native-expo-image-cache#readme",
   "devDependencies": {
-    "@team-griffin/install-self-peers": "^1.1.1",
-    "babel-eslint": "^8.2.1",
-    "babel-preset-expo": "^4.0.0",
-    "eslint": "^4.16.0",
-    "eslint-config-airbnb": "^16.1.0",
-    "eslint-plugin-flowtype": "^2.42.0",
-    "eslint-plugin-import": "^2.8.0",
-    "eslint-plugin-jsx-a11y": "^6.0.3",
-    "eslint-plugin-react": "^7.6.0",
-    "flow-bin": "^0.64.0",
-    "flow-result-checker": "^1.0.0"
+    "@react-native-community/bob": "^0.4.1",
+    "@types/crypto-js": "^3.1.43",
+    "@types/lodash": "^4.14.134",
+    "@types/react": "^16.8.20",
+    "@types/react-native": "^0.57.63",
+    "eslint": "^5.16.0",
+    "eslint-config-react-native-wcandillon": "^1.2.2",
+    "expo-blur": "^5.0.1",
+    "expo-file-system": "^5.0.1"
   },
   "dependencies": {
-    "babel-cli": "^6.26.0",
-    "babel-preset-react-native": "^4.0.0",
     "crypto-js": "^3.1.9-1",
-    "eslint-plugin-react-native": "^3.2.1",
     "lodash": "^4.17.4"
   },
   "peerDependencies": {
-    "expo": "*",
+    "expo-blur": "*",
+    "expo-file-system": "*",
     "react": "*",
     "react-native": "*"
+  },
+  "@react-native-community/bob": {
+    "source": "src",
+    "output": "dist",
+    "targets": [
+      "module",
+      "typescript"
+    ]
   }
 }
