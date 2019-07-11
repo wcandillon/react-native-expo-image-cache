@@ -24,7 +24,7 @@ interface ImageProps {
   uri: string;
   transitionDuration?: number;
   tint?: "dark" | "light";
-  onError: (error: {nativeEvent: {error: Error}}) => void,
+  onError: (error: { nativeEvent: { error: Error } }) => void;
 }
 
 interface ImageState {
@@ -76,11 +76,11 @@ export default class Image extends React.Component<ImageProps, ImageState> {
           if (path) {
             this.setState({ uri: path });
           } else {
-            onError({nativeEvent: {error: new Error("Could not load image")}});
+            onError({ nativeEvent: { error: new Error("Could not load image") } });
           }
         }
       } catch (error) {
-        onError({nativeEvent: {error}});
+        onError({ nativeEvent: { error } });
       }
     }
   }
