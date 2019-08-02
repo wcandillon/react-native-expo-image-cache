@@ -37,12 +37,12 @@
     "@types/react-native": "^0.57.63",
     "eslint": "^5.16.0",
     "eslint-config-react-native-wcandillon": "^1.2.2",
-    "expo-blur": "^5.0.1",
     "expo-file-system": "^5.0.1"
   },
   "dependencies": {
     "crypto-js": "^3.1.9-1",
-    "lodash": "^4.17.4"
+    "lodash": "^4.17.4",
+    "expo-blur": "^6.0.0"
   },
   "peerDependencies": {
     "expo-blur": "*",
