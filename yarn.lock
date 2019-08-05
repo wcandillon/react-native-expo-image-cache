@@ -1137,9 +1137,10 @@ execa@^0.6.1:
     signal-exit "^3.0.0"
     strip-eof "^1.0.0"
 
-expo-blur@^5.0.1:
-  version "5.0.1"
-  resolved "https://registry.yarnpkg.com/expo-blur/-/expo-blur-5.0.1.tgz#39edbb391965ec3b426ded6b869618d8294dd56c"
+expo-blur@^6.0.0:
+  version "6.0.0"
+  resolved "https://registry.yarnpkg.com/expo-blur/-/expo-blur-6.0.0.tgz#c63e7c464e1a8137dae8a71f893426a538eb9ed9"
+  integrity sha512-UqMaE2G2DfoeEJCYFfFLXq9nBeD0m3G1IISpxmdLXHDvzQuFl0kzNAZXX81a9sByWTV85KsxxnxoLImbfxV33A==
   dependencies:
     prop-types "^15.6.0"
 
