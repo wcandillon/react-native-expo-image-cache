@@ -1,6 +1,6 @@
 {
   "name": "react-native-expo-image-cache",
-  "version": "4.0.6",
+  "version": "4.0.7",
   "description": "React Native Image Cache and Progressive Loading based on Expo",
   "main": "dist/module/index.js",
   "react-native": "dist/module/index.js",
@@ -37,12 +37,12 @@
     "@types/react-native": "^0.57.63",
     "eslint": "^5.16.0",
     "eslint-config-react-native-wcandillon": "^1.2.2",
-    "expo-file-system": "^5.0.1"
+    "expo-file-system": "^5.0.1",
+    "expo-blur": "^6.0.0"
   },
   "dependencies": {
     "crypto-js": "^3.1.9-1",
-    "lodash": "^4.17.4",
-    "expo-blur": "^6.0.0"
+    "lodash": "^4.17.4"
   },
   "peerDependencies": {
     "expo-blur": "*",
