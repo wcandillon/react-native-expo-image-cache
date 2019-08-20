@@ -13,7 +13,7 @@ import {
   StyleProp
 } from "react-native";
 import { BlurView } from "expo-blur";
-import { Asset } from 'expo-asset';
+import { Asset } from "expo-asset";
 
 import CacheManager, { DownloadOptions } from "./CacheManager";
 
