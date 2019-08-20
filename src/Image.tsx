@@ -13,6 +13,7 @@ import {
   StyleProp
 } from "react-native";
 import { BlurView } from "expo-blur";
+import { Asset } from "expo-asset";
 
 import CacheManager, { DownloadOptions } from "./CacheManager";
 
@@ -24,6 +25,7 @@ interface ImageProps {
   uri: string;
   transitionDuration?: number;
   tint?: "dark" | "light";
+  fallback?: number;
 }
 
 interface ImageState {
@@ -66,10 +68,13 @@ export default class Image extends React.Component<ImageProps, ImageState> {
     this.mounted = false;
   }
 
-  async load({ uri, options = {} }: ImageProps): Promise<void> {
+  async load({ uri, options = {}, fallback }: ImageProps): Promise<void> {
     if (uri) {
-      const path = await CacheManager.get(uri, options).getPath();
+      let path = await CacheManager.get(uri, options).getPath();
       if (this.mounted) {
+        if (!path && fallback && Number.isInteger(fallback)) {
+          path = Asset.fromModule(fallback).uri;
+        }
         this.setState({ uri: path });
       }
     }
