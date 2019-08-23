@@ -17,6 +17,8 @@ export class CacheEntry {
 
   cacheKey: string;
 
+  downloadPromise: Promise<string | undefined> | undefined;
+
   constructor(uri: string, options: DownloadOptions, cacheKey: string) {
     this.uri = uri;
     this.options = options;
@@ -24,14 +26,23 @@ export class CacheEntry {
   }
 
   async getPath(): Promise<string | undefined> {
-    const { uri, options, cacheKey } = this;
+    const { cacheKey } = this;
     const { path, exists, tmpPath } = await getCacheEntry(cacheKey);
     if (exists) {
       return path;
     }
+    if (!this.downloadPromise) {
+      this.downloadPromise = this.download(path, tmpPath);
+    }
+    return this.downloadPromise;
+  }
+
+  private async download(path: string, tmpPath: string): Promise<string | undefined> {
+    const { uri, options } = this;
     const result = await FileSystem.createDownloadResumable(uri, tmpPath, options).downloadAsync();
     // If the image download failed, we don't cache anything
     if (result && result.status !== 200) {
+      this.downloadPromise = undefined;
       return undefined;
     }
     await FileSystem.moveAsync({ from: tmpPath, to: path });
