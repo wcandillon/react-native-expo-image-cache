@@ -22,6 +22,7 @@ interface ImageProps {
   preview?: ImageSourcePropType;
   options?: DownloadOptions;
   uri: string;
+  cacheKey?: string;
   transitionDuration?: number;
   tint?: "dark" | "light";
 }
@@ -66,9 +67,9 @@ export default class Image extends React.Component<ImageProps, ImageState> {
     this.mounted = false;
   }
 
-  async load({ uri, options = {} }: ImageProps): Promise<void> {
+  async load({ uri, options = {}, cacheKey }: ImageProps): Promise<void> {
     if (uri) {
-      const path = await CacheManager.get(uri, options).getPath();
+      const path = await CacheManager.get(uri, options, cacheKey || uri).getPath();
       if (this.mounted) {
         this.setState({ uri: path });
       }

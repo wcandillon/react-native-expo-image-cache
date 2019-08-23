@@ -15,14 +15,17 @@ export class CacheEntry {
 
   options: DownloadOptions;
 
-  constructor(uri: string, options: DownloadOptions) {
+  cacheKey: string;
+
+  constructor(uri: string, options: DownloadOptions, cacheKey: string) {
     this.uri = uri;
     this.options = options;
+    this.cacheKey = cacheKey;
   }
 
   async getPath(): Promise<string | undefined> {
-    const { uri, options } = this;
-    const { path, exists, tmpPath } = await getCacheEntry(uri);
+    const { uri, options, cacheKey } = this;
+    const { path, exists, tmpPath } = await getCacheEntry(cacheKey);
     if (exists) {
       return path;
     }
@@ -39,11 +42,11 @@ export class CacheEntry {
 export default class CacheManager {
   static entries: { [uri: string]: CacheEntry } = {};
 
-  static get(uri: string, options: DownloadOptions): CacheEntry {
-    if (!CacheManager.entries[uri]) {
-      CacheManager.entries[uri] = new CacheEntry(uri, options);
+  static get(uri: string, options: DownloadOptions, cacheKey: string): CacheEntry {
+    if (!CacheManager.entries[cacheKey]) {
+      CacheManager.entries[cacheKey] = new CacheEntry(uri, options, cacheKey);
     }
-    return CacheManager.entries[uri];
+    return CacheManager.entries[cacheKey];
   }
 
   static async clearCache(): Promise<void> {
@@ -60,11 +63,15 @@ export default class CacheManager {
   }
 }
 
-const getCacheEntry = async (uri: string): Promise<{ exists: boolean; path: string; tmpPath: string }> => {
-  const filename = uri.substring(uri.lastIndexOf("/"), uri.indexOf("?") === -1 ? uri.length : uri.indexOf("?"));
+const getCacheEntry = async (cacheKey: string): Promise<{ exists: boolean; path: string; tmpPath: string }> => {
+  const filename = cacheKey.substring(
+    cacheKey.lastIndexOf("/"),
+    cacheKey.indexOf("?") === -1 ? cacheKey.length : cacheKey.indexOf("?")
+  );
   const ext = filename.indexOf(".") === -1 ? ".jpg" : filename.substring(filename.lastIndexOf("."));
-  const path = `${BASE_DIR}${SHA1(uri)}${ext}`;
-  const tmpPath = `${BASE_DIR}${SHA1(uri)}-${_.uniqueId()}${ext}`;
+  const sha = SHA1(cacheKey);
+  const path = `${BASE_DIR}${sha}${ext}`;
+  const tmpPath = `${BASE_DIR}${sha}-${_.uniqueId()}${ext}`;
   // TODO: maybe we don't have to do this every time
   try {
     await FileSystem.makeDirectoryAsync(BASE_DIR);
