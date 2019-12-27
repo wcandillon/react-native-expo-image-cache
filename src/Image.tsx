@@ -1,5 +1,5 @@
-// @flow
-import * as _ from "lodash";
+import pickBy from "lodash/pickBy";
+import transform from "lodash/transform";
 import * as React from "react";
 import {
   Image as RNImage,
@@ -96,7 +96,7 @@ export default class Image extends React.Component<ImageProps, ImageState> {
     const flattenedStyle = StyleSheet.flatten(style);
     const computedStyle: StyleProp<ImageStyle> = [
       StyleSheet.absoluteFill,
-      _.transform(_.pickBy(flattenedStyle, (_val, key) => propsToCopy.indexOf(key) !== -1), (result, value: any, key) =>
+      transform(pickBy(flattenedStyle, (_val, key) => propsToCopy.indexOf(key) !== -1), (result, value: any, key) =>
         Object.assign(result, { [key]: value - (flattenedStyle.borderWidth || 0) })
       )
     ];
