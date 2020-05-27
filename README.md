@@ -46,9 +46,9 @@ const uri = "https://firebasestorage.googleapis.com/v0/b/react-native-e.appspot.
 Get the local image from a remote URI
 
 ```js
-import {CacheManager} from "react-native-expo-image-cache";
+import { CacheManager } from "react-native-expo-image-cache";
 
-const {uri} = this.props;
+const { uri } = this.props;
 const path = await CacheManager.get(uri).getPath();
 // if path is undefined, the image download has failed 
 ```
@@ -57,7 +57,7 @@ You can also clear the local cache:
 
 ```js
 
-import {CacheManager} from "react-native-expo-image-cache";
+import { CacheManager } from "react-native-expo-image-cache";
 
 await CacheManager.clearCache();
 ```
