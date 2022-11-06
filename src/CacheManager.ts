@@ -60,8 +60,21 @@ export default class CacheManager {
   }
 }
 
+/*
+ * Returns the index of the query tail (i.e. the first ? or & after the last forward slash)
+ * , or the length of the string if there is no query tail.
+ */
+const getIndexOfQueryTail = (uri: string, minIndex: number = 0): number => {
+  for (let i = minIndex; i < uri.length; i += 1) {
+    if (uri.charAt(i) === "?" || uri.charAt(i) === "&") {
+      return i;
+    }
+  }
+  return uri.length;
+};
+
 const getCacheEntry = async (uri: string): Promise<{ exists: boolean; path: string; tmpPath: string }> => {
-  const filename = uri.substring(uri.lastIndexOf("/"), uri.indexOf("?") === -1 ? uri.length : uri.indexOf("?"));
+  const filename = uri.substring(uri.lastIndexOf("/"), getIndexOfQueryTail(uri, uri.lastIndexOf("/")));
   const ext = filename.indexOf(".") === -1 ? ".jpg" : filename.substring(filename.lastIndexOf("."));
   const path = `${BASE_DIR}${SHA1(uri)}${ext}`;
   const tmpPath = `${BASE_DIR}${SHA1(uri)}-${_.uniqueId()}${ext}`;
